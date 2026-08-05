@@ -12,6 +12,7 @@
   --orange:#F97316; --orange-dark:#DC6407;
   --ink:#0F2233; --muted:#5B7288; --line:#DCE6EE; --bg:#F4F8FB; --white:#fff;
   --radius:16px; --shadow:0 10px 30px -12px rgba(11,95,165,.28);
+  --gold:#FFD700;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.65}
@@ -81,10 +82,13 @@ th:last-child{background:var(--green-soft);color:#0a6a53}
 .badge{display:inline-block;background:var(--green-soft);color:#0a6a53;padding:4px 10px;border-radius:99px;font-size:11.5px;font-weight:700}
 .badge.blue{background:var(--blue-soft);color:var(--blue-dark)}
 .badge.orange{background:#FFF0E4;color:var(--orange-dark)}
+.badge.gold{background:var(--gold);color:#7A6200}
 .grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
-.tile{border:1px solid var(--line);border-radius:14px;padding:14px;background:#fff}
+.tile{border:1px solid var(--line);border-radius:14px;padding:14px;background:#fff;cursor:pointer;transition:transform .15s,box-shadow .15s}
+.tile:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
 .note{background:var(--green-soft);border-left:4px solid var(--green);padding:12px 14px;border-radius:0 12px 12px 0;font-size:13.5px;margin-top:12px}
 .note.warn{background:#FFF6E9;border-color:var(--orange)}
+.note.gold{background:#FFFDE6;border-color:var(--gold)}
 
 /* quiz */
 .q{border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px}
@@ -104,13 +108,30 @@ th:last-child{background:var(--green-soft);color:#0a6a53}
 .modal.wide{max-width:1000px}
 .modal h2{font-size:20px;color:var(--blue-dark);font-weight:800}
 .tabs{display:flex;gap:6px;flex-wrap:wrap;margin:14px 0}
-.tab{padding:8px 13px;border-radius:99px;background:var(--bg);font-size:12.5px;font-weight:700;color:var(--muted)}
+.tab{padding:8px 13px;border-radius:99px;background:var(--bg);font-size:12.5px;font-weight:700;color:var(--muted);cursor:pointer}
 .tab.active{background:var(--blue);color:#fff}
 .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:12px 18px;border-radius:12px;font-size:13.5px;z-index:200;box-shadow:var(--shadow)}
 .tblwrap{overflow:auto;max-height:50vh;border:1px solid var(--line);border-radius:12px}
 footer{background:var(--blue-dark);color:#fff;padding:26px 16px;text-align:center;font-size:13px}
 footer b{color:#fff}
 footer span{opacity:.75}
+
+/* GT Hub styles */
+.gt-card{background:linear-gradient(135deg,#FF6B35,#F7931E);color:#fff;border:0;position:relative;overflow:hidden}
+.gt-card::before{content:'⚡';position:absolute;font-size:120px;right:-20px;bottom:-40px;opacity:.15}
+.gt-tile{background:#fff;border:2px solid var(--line);border-radius:14px;padding:16px;text-align:center;cursor:pointer;transition:all .2s}
+.gt-tile:hover{transform:scale(1.03);border-color:var(--orange);box-shadow:var(--shadow)}
+.gt-tile .icon{font-size:36px;display:block;margin-bottom:6px}
+.gt-tile .label{font-weight:700;font-size:14px}
+.gt-tile .desc{font-size:12px;color:var(--muted)}
+.gt-tile.locked{opacity:.5;cursor:not-allowed}
+.gt-tile.locked:hover{transform:none}
+.point-badge{background:var(--gold);color:#7A6200;padding:2px 10px;border-radius:99px;font-weight:700;font-size:12px}
+
+.forum-post{background:var(--bg);border-radius:12px;padding:12px;margin-bottom:10px}
+.forum-post .user{font-weight:700;color:var(--blue-dark)}
+.forum-post .time{font-size:11px;color:var(--muted)}
+.forum-post .content{margin-top:4px}
 
 @media(max-width:900px){
   .layout{grid-template-columns:1fr;padding:14px 12px 50px}
@@ -168,6 +189,7 @@ footer span{opacity:.75}
     </div>
     <div class="hspace"></div>
     <button class="hbtn" onclick="go('petunjuk')">Petunjuk</button>
+    <button class="hbtn cta" onclick="go('gthub')">⚡ GT Hub</button>
     <button class="hbtn" onclick="openTeacher()">Mode Guru</button>
   </div>
 </header>
@@ -191,7 +213,7 @@ footer span{opacity:.75}
 
 <script>
 /* =================== STORAGE =================== */
-const K={cfg:'jk_cfg',student:'jk_student',scores:'jk_scores',prog:'jk_prog',bank:'jk_bank',roster:'jk_roster'};
+const K={cfg:'jk_cfg',student:'jk_student',scores:'jk_scores',prog:'jk_prog',bank:'jk_bank',roster:'jk_roster',gthub:'jk_gthub'};
 const load=(k,d)=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}};
 const save=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
 let cfg=load(K.cfg,{teacher:'Ramdan Ahmad Dijaya, S.Pd',role:'Guru Informatika',classes:'Kelas X, XI, XII SMA',school:'SMA &middot; Mata Pelajaran Informatika',pin:'1234',sheetUrl:'',photo:'',logo:''});
@@ -199,6 +221,29 @@ let student=load(K.student,null);
 let scores=load(K.scores,[]);
 let prog=load(K.prog,{});
 let roster=load(K.roster,[]);
+
+// GT Hub data
+let gthub=load(K.gthub,{
+  points:0,
+  games:[
+    {id:'matching',name:'Match Game',icon:'🧩',desc:'Cocokkan konsep jaringan',unlocked:true},
+    {id:'flashcards',name:'Flash Cards',icon:'🃏',desc:'Hafalkan istilah dengan cepat',unlocked:true},
+    {id:'quizrace',name:'Quiz Race',icon:'🏁',desc:'Jawab cepat 10 soal',unlocked:false,required:3},
+    {id:'networkbuilder',name:'Network Builder',icon:'🏗️',desc:'Buat topologi sendiri',unlocked:false,required:5}
+  ],
+  tasks:[
+    {id:'t1',title:'Baca Materi PAN',done:false,points:10},
+    {id:'t2',title:'Baca Materi LAN',done:false,points:10},
+    {id:'t3',title:'Kerjakan Kuis Topologi',done:false,points:15},
+    {id:'t4',title:'Buat Ringkasan 5 Topologi',done:false,points:20},
+    {id:'t5',title:'Kerjakan Kuis Akhir Bab',done:false,points:25}
+  ],
+  forum:[
+    {user:'Aisyah',time:'10 Menit lalu',content:'Ada yang bisa jelaskan perbedaan MAN dan WAN?'},
+    {user:'Budi',time:'25 Menit lalu',content:'Topologi mana yang paling aman?'},
+    {user:'Citra',time:'1 Jam lalu',content:'Terima kasih, materinya sangat membantu!'}
+  ]
+});
 
 function toast(msg,ms=2600){const t=document.createElement('div');t.className='toast';t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),ms)}
 
@@ -439,7 +484,7 @@ function submitGate(){
 }
 
 /* =================== NAV =================== */
-const PAGES=[{id:'beranda',t:'Beranda'},{id:'petunjuk',t:'Petunjuk Penggunaan'},{id:'tentang',t:'Tentang'},{id:'riwayat',t:'Riwayat Skor Saya'}];
+const PAGES=[{id:'beranda',t:'Beranda'},{id:'petunjuk',t:'Petunjuk'},{id:'gthub',t:'⚡ GT Hub'},{id:'tentang',t:'Tentang'},{id:'riwayat',t:'Riwayat Skor'}];
 function buildNav(){
   let h='<div class="sb-title">Navigasi</div>';
   PAGES.forEach(p=>h+=`<button class="navitem" data-id="${p.id}" onclick="go('${p.id}')"><span class="dot"></span>${p.t}</button>`);
@@ -460,10 +505,159 @@ function go(id){
   sidebar.classList.remove('open'); window.scrollTo({top:0,behavior:'smooth'});
   if(id==='beranda')return renderHome();
   if(id==='petunjuk')return renderPetunjuk();
+  if(id==='gthub')return renderGTHub();
   if(id==='tentang')return renderTentang();
   if(id==='riwayat')return renderRiwayat();
   if(id==='final')return renderFinal();
   renderMateri(id);
+}
+
+/* =================== GT HUB =================== */
+function renderGTHub(){
+  const done = Object.keys(prog).length;
+  const totalTasks = gthub.tasks.length;
+  const doneTasks = gthub.tasks.filter(t=>t.done).length;
+  
+  main.innerHTML=`
+    <div class="card gt-card">
+      <span class="badge gold" style="background:var(--gold);color:#7A6200">⚡ GT Hub</span>
+      <h2 style="color:#fff;margin-top:6px;font-size:28px">Game & Task Hub</h2>
+      <p style="opacity:.9;font-size:15px;margin-top:4px">Kumpulan aktivitas interaktif untuk memperdalam pemahamanmu tentang Jaringan Komputer!</p>
+      <div style="margin-top:12px;display:flex;gap:14px;flex-wrap:wrap">
+        <span style="background:rgba(255,255,255,.2);padding:6px 14px;border-radius:99px;font-size:13px">⭐ Poin: <b>${gthub.points}</b></span>
+        <span style="background:rgba(255,255,255,.2);padding:6px 14px;border-radius:99px;font-size:13px">📚 Materi selesai: <b>${done}/${MATERI.length}</b></span>
+        <span style="background:rgba(255,255,255,.2);padding:6px 14px;border-radius:99px;font-size:13px">✅ Tugas: <b>${doneTasks}/${totalTasks}</b></span>
+      </div>
+    </div>
+
+    <!-- GAMES -->
+    <div class="card">
+      <h3 style="margin-top:0">🎮 Game Center</h3>
+      <p class="lead">Klik game untuk bermain dan kumpulkan poin!</p>
+      <div class="grid2">
+        ${gthub.games.map(g=>`
+          <div class="gt-tile ${!g.unlocked?'locked':''}" onclick="${g.unlocked?`playGame('${g.id}')`:''}">
+            <span class="icon">${g.icon}</span>
+            <div class="label">${g.name}</div>
+            <div class="desc">${g.desc}</div>
+            ${g.unlocked?'<span class="point-badge" style="margin-top:6px;display:inline-block">✅ Tersedia</span>':
+            `<span style="font-size:11px;color:#e05252">🔒 Selesaikan ${g.required} materi</span>`}
+          </div>
+        `).join('')}
+      </div>
+    </div>
+
+    <!-- TASKS -->
+    <div class="card">
+      <h3 style="margin-top:0">📋 Daftar Tugas</h3>
+      <p class="lead">Selesaikan tugas untuk dapat poin tambahan!</p>
+      ${gthub.tasks.map((t,i)=>`
+        <div style="display:flex;align-items:center;gap:12px;padding:10px;border-bottom:1px solid var(--line)">
+          <input type="checkbox" ${t.done?'checked':''} onchange="toggleTask(${i})" style="width:20px;height:20px;cursor:pointer">
+          <div style="flex:1">
+            <div style="font-weight:${t.done?'500':'600'}">${t.title}</div>
+            <div style="font-size:12px;color:var(--muted)">+${t.points} poin</div>
+          </div>
+          ${t.done?'<span style="color:var(--green)">✅ Selesai</span>':'<span style="color:var(--muted)">⏳ Belum</span>'}
+        </div>
+      `).join('')}
+    </div>
+
+    <!-- FORUM -->
+    <div class="card">
+      <h3 style="margin-top:0">💬 Forum Diskusi</h3>
+      <p class="lead">Tanya jawab seputar materi jaringan komputer.</p>
+      ${gthub.forum.map(p=>`
+        <div class="forum-post">
+          <div><span class="user">${p.user}</span> <span class="time">${p.time}</span></div>
+          <div class="content">${p.content}</div>
+        </div>
+      `).join('')}
+      <div class="row" style="margin-top:12px">
+        <input id="forumMsg" placeholder="Tulis pertanyaan atau komentar..." style="flex:1;padding:10px 12px;border:1.5px solid var(--line);border-radius:11px">
+        <button class="btn orange" onclick="postForum()">Kirim</button>
+      </div>
+    </div>
+
+    <div class="note gold" style="border-color:var(--gold)">
+      <b>💡 Tips:</b> Semakin banyak materi yang kamu selesaikan, semakin banyak game yang terbuka! 
+      Kumpulkan poin untuk menjadi peringkat teratas di kelas.
+    </div>
+  `;
+}
+
+/* =================== GT HUB FUNCTIONS =================== */
+function playGame(gameId){
+  const game = gthub.games.find(g=>g.id===gameId);
+  if(!game || !game.unlocked){toast('Game ini belum terbuka! Selesaikan materi dulu.');return;}
+  
+  let msg = '';
+  let pointsGain = 0;
+  
+  switch(gameId){
+    case 'matching':
+      msg = '🧩 Match Game: Cocokkan istilah dengan definisinya!\n\n1. PAN - Jaringan pribadi 1-10m\n2. LAN - Jaringan dalam gedung\n3. MAN - Jaringan satu kota\n4. WAN - Jaringan antar negara\n\nKlik tombol "Mulai" untuk bermain!';
+      pointsGain = 5 + Math.floor(Math.random()*5);
+      break;
+    case 'flashcards':
+      msg = '🃏 Flash Cards: Hafalkan istilah!\n\nKartu akan muncul satu per satu. Tekan "Tahu" jika sudah hafal.\n\nISTILAH: Topologi, Hub, Switch, Router, Gateway, Firewall, DNS, IP Address, Subnet, Bandwidth';
+      pointsGain = 3 + Math.floor(Math.random()*4);
+      break;
+    case 'quizrace':
+      msg = '🏁 Quiz Race: Jawab 10 soal secepat mungkin!\n\nSoal akan diacak dari semua materi.\nWaktu terbaikmu akan dicatat!';
+      pointsGain = 10 + Math.floor(Math.random()*10);
+      break;
+    case 'networkbuilder':
+      msg = '🏗️ Network Builder: Buat topologi jaringanku sendiri!\n\nTersedia komponen: PC, Server, Switch, Router, Kabel.\nSeret dan letakkan untuk membuat jaringan!';
+      pointsGain = 15 + Math.floor(Math.random()*10);
+      break;
+  }
+  
+  if(confirm(msg + '\n\nMainkan dan dapatkan +' + pointsGain + ' poin?')){
+    gthub.points += pointsGain;
+    save(K.gthub,gthub);
+    toast('🎉 +' + pointsGain + ' poin! Total: ' + gthub.points + ' poin');
+    renderGTHub();
+  }
+}
+
+function toggleTask(index){
+  const task = gthub.tasks[index];
+  const newState = !task.done;
+  
+  if(newState){
+    gthub.points += task.points;
+    toast('✅ Tugas selesai! +' + task.points + ' poin');
+  } else {
+    gthub.points -= task.points;
+    toast('↩️ Tugas dibatalkan. -' + task.points + ' poin');
+  }
+  
+  task.done = newState;
+  save(K.gthub,gthub);
+  
+  // Check if all tasks done
+  if(gthub.tasks.every(t=>t.done)){
+    setTimeout(()=>toast('🎊 Selamat! Semua tugas selesai! Kamu hebat!'), 500);
+  }
+  
+  renderGTHub();
+}
+
+function postForum(){
+  const msg = document.getElementById('forumMsg');
+  if(!msg.value.trim()){toast('Tulis pesan terlebih dahulu.');return;}
+  
+  gthub.forum.unshift({
+    user: student ? student.name : 'Anonim',
+    time: 'Baru saja',
+    content: msg.value.trim()
+  });
+  
+  save(K.gthub,gthub);
+  msg.value = '';
+  toast('💬 Pesan terkirim!');
+  renderGTHub();
 }
 
 /* =================== RENDER PAGES =================== */
@@ -473,7 +667,11 @@ function renderHome(){
     <span class="badge orange">Informatika &middot; Kelas X SMA</span>
     <h2 style="color:#fff;margin-top:10px;font-size:28px">Jaringan Komputer</h2>
     <p style="opacity:.9;font-size:15px;margin-top:6px">Belajar mandiri dasar jaringan komputer: jenis jaringan (PAN, LAN, MAN, WAN), arsitektur jaringan, dan enam topologi fisik &mdash; lengkap dengan diagram dan kuis interaktif.</p>
-    <div class="row" style="margin-top:16px"><button class="btn orange" onclick="go('pan')">Mulai dari Materi Pertama</button><button class="btn ghost" onclick="go('petunjuk')">Petunjuk Penggunaan</button></div></div>
+    <div class="row" style="margin-top:16px">
+      <button class="btn orange" onclick="go('pan')">Mulai dari Materi Pertama</button>
+      <button class="btn ghost" onclick="go('gthub')">⚡ GT Hub</button>
+      <button class="btn ghost" onclick="go('petunjuk')">Petunjuk</button>
+    </div></div>
 
   <div class="card"><h3 style="margin-top:0">Identitas Siswa</h3>
     <div class="grid2">
@@ -489,11 +687,12 @@ function renderHome(){
       <div style="font-weight:700;margin-top:8px">${m.title}</div>
       <div style="font-size:12px;color:var(--muted)">${m.group}</div></button>`).join('')}</div>
     <div class="note">Progres belajarmu: <b>${done}/${MATERI.length}</b> materi. Setiap materi diakhiri kuis singkat, dan di akhir tersedia <b>Kuis Akhir Bab</b> berisi 18 soal acak.</div>
+    <div class="note gold" style="border-color:var(--gold);margin-top:8px">⚡ Jangan lupa kunjungi <b>GT Hub</b> untuk game, tugas, dan forum diskusi!</div>
   </div>`;
 }
 function renderPetunjuk(){
   main.innerHTML=`<div class="card"><span class="eyebrow">Panduan</span><h2>Petunjuk Penggunaan</h2>
-  ${li(['Isi form absensi (nama, kelas, alamat) sebelum masuk materi. Data ini otomatis melekat pada setiap skor kuismu.','Pilih materi dari menu samping (klik ikon &#9776; pada HP untuk membuka menu).','Baca penjelasan, perhatikan diagram, lalu kerjakan kuis singkat di bagian bawah tiap materi.','Klik <b>Periksa Jawaban</b> untuk melihat skor, jawaban benar/salah, dan pembahasan.','Materi yang sudah dikuisi akan ditandai hijau pada menu dan menambah progres belajar.','Setelah semua materi selesai, kerjakan <b>Kuis Akhir Bab</b> (18 soal acak).','Lihat seluruh nilaimu di menu <b>Riwayat Skor Saya</b>.'])}
+  ${li(['Isi form absensi (nama, kelas, alamat) sebelum masuk materi. Data ini otomatis melekat pada setiap skor kuismu.','Pilih materi dari menu samping (klik ikon &#9776; pada HP untuk membuka menu).','Baca penjelasan, perhatikan diagram, lalu kerjakan kuis singkat di bagian bawah tiap materi.','Klik <b>Periksa Jawaban</b> untuk melihat skor, jawaban benar/salah, dan pembahasan.','Materi yang sudah dikuisi akan ditandai hijau pada menu dan menambah progres belajar.','Setelah semua materi selesai, kerjakan <b>Kuis Akhir Bab</b> (18 soal acak).','Kunjungi <b>⚡ GT Hub</b> untuk bermain game, mengerjakan tugas, dan berdiskusi di forum!','Lihat seluruh nilaimu di menu <b>Riwayat Skor Saya</b>.'])}
   <div class="note">Setiap kali kuis selesai, nilaimu otomatis dikirim ke Google Spreadsheet guru. Status pengiriman akan tampil di bawah hasil kuis.</div>
   <div class="note warn">Gunakan perangkat yang sama agar riwayat belajar dan skormu tetap tersimpan.</div></div>`;
 }
@@ -507,7 +706,7 @@ function renderTentang(){
     <div class="avatar" style="width:88px;height:88px;background:var(--green-soft);color:var(--green);font-size:11px" id="aboutLogo">LOGO SEKOLAH</div>
   </div>
   <h3>Tentang Aplikasi</h3>
-  <p class="lead">Modul pembelajaran interaktif Informatika SMA dengan tema <b>Jaringan Komputer</b>. Berisi materi dasar jaringan, diagram skematik tiap konsep, kuis per sub-bab, kuis akhir bab, serta pencatatan absensi dan nilai otomatis ke Google Spreadsheet guru.</p>
+  <p class="lead">Modul pembelajaran interaktif Informatika SMA dengan tema <b>Jaringan Komputer</b>. Berisi materi dasar jaringan, diagram skematik tiap konsep, kuis per sub-bab, kuis akhir bab, serta <b>GT Hub</b> (Game & Task Hub) untuk aktivitas interaktif.</p>
   <div class="note">${cfg.school}</div></div>`;
   applyPhotos();
 }
@@ -568,6 +767,14 @@ function checkQuiz(qs,title,id){
   const rec={ts:new Date().toLocaleString('id-ID'),name:student?student.name:'-',grade:student?student.grade:'-',address:student?student.address:'-',subject:'Informatika',title,correct,wrong,score};
   scores.push(rec);save(K.scores,scores);
   if(id!=='final'){prog[id]=true;save(K.prog,prog);buildNav();document.querySelectorAll('.navitem').forEach(b=>b.classList.toggle('active',b.dataset.id===id));}
+  
+  // Auto-update GT Hub tasks
+  if(id==='final'){gthub.tasks.find(t=>t.id==='t5').done=true;save(K.gthub,gthub);}
+  if(id==='bus'||id==='ring'||id==='starT'||id==='mesh'||id==='tree'||id==='hybrid'){
+    const topicsDone = ['bus','ring','starT','mesh','tree','hybrid'].filter(tid=>prog[tid]).length;
+    if(topicsDone>=5){gthub.tasks.find(t=>t.id==='t3').done=true;save(K.gthub,gthub);}
+  }
+  
   sendToSheet('skor',{timestamp:rec.ts,nama:rec.name,kelas:rec.grade,alamat:rec.address,mapel:rec.subject,judul_kuis:title,benar:correct,salah:wrong,nilai:score},document.getElementById('sendStatus'));
   res.scrollIntoView({behavior:'smooth',block:'center'});
 }
@@ -686,7 +893,22 @@ function resetData(t){
   if(t==='scores'){scores=[];save(K.scores,scores)}
   if(t==='roster'){roster=[];save(K.roster,roster)}
   if(t==='bank'){bank=JSON.parse(JSON.stringify(DEFAULT_BANK));save(K.bank,bank)}
-  if(t==='all'){[K.scores,K.roster,K.prog,K.student].forEach(k=>localStorage.removeItem(k));scores=[];roster=[];prog={};student=null}
+  if(t==='all'){[K.scores,K.roster,K.prog,K.student,K.gthub].forEach(k=>localStorage.removeItem(k));scores=[];roster=[];prog={};student=null;gthub=load(K.gthub,{points:0,games:[
+    {id:'matching',name:'Match Game',icon:'🧩',desc:'Cocokkan konsep jaringan',unlocked:true},
+    {id:'flashcards',name:'Flash Cards',icon:'🃏',desc:'Hafalkan istilah dengan cepat',unlocked:true},
+    {id:'quizrace',name:'Quiz Race',icon:'🏁',desc:'Jawab cepat 10 soal',unlocked:false,required:3},
+    {id:'networkbuilder',name:'Network Builder',icon:'🏗️',desc:'Buat topologi sendiri',unlocked:false,required:5}
+  ],tasks:[
+    {id:'t1',title:'Baca Materi PAN',done:false,points:10},
+    {id:'t2',title:'Baca Materi LAN',done:false,points:10},
+    {id:'t3',title:'Kerjakan Kuis Topologi',done:false,points:15},
+    {id:'t4',title:'Buat Ringkasan 5 Topologi',done:false,points:20},
+    {id:'t5',title:'Kerjakan Kuis Akhir Bab',done:false,points:25}
+  ],forum:[
+    {user:'Aisyah',time:'10 Menit lalu',content:'Ada yang bisa jelaskan perbedaan MAN dan WAN?'},
+    {user:'Budi',time:'25 Menit lalu',content:'Topologi mana yang paling aman?'},
+    {user:'Citra',time:'1 Jam lalu',content:'Terima kasih, materinya sangat membantu!'}
+  ]})}
   buildNav();toast('Data direset.');teacherTab();
 }
 function applyIdentity(){
@@ -703,9 +925,27 @@ function applyPhotos(){
   imgOr(document.getElementById('aboutLogo'),cfg.logo,'LOGO SEKOLAH');
 }
 
+/* =================== CHECK UNLOCKED GAMES =================== */
+function checkUnlockedGames(){
+  const done = Object.keys(prog).length;
+  gthub.games.forEach(g=>{
+    if(g.required && done >= g.required) g.unlocked = true;
+  });
+  save(K.gthub,gthub);
+}
+
+// Check unlocked games whenever progress changes
+const originalGo = go;
+go = function(id){
+  checkUnlockedGames();
+  originalGo(id);
+};
+
 /* =================== INIT =================== */
 document.getElementById('year').textContent=new Date().getFullYear();
 applyIdentity();applyPhotos();buildNav();
+checkUnlockedGames();
+
 if(student){gate.classList.add('hidden');go('beranda')}
 </script>
 </body>
