@@ -1305,18 +1305,39 @@ function teacherTab() {
   if (tTab === 'soal') renderSoal();
   
   if (tTab === 'reset') {
-    b.innerHTML = `
-      <div class="field"><label>Ubah PIN Mode Guru (4&ndash;8 digit)</label><input id="cPin" value="${cfg.pin}" maxlength="8"></div>
-      <button class="btn" onclick="savePin()">Simpan PIN</button>
-      <div class="note warn" style="margin-top:16px"><b>Reset data lokal</b> &mdash; tindakan ini tidak menghapus data yang sudah masuk ke Google Spreadsheet.</div>
-      <div class="row" style="margin-top:10px">
-        <button class="btn ghost" onclick="resetData('scores')">Hapus Data Skor</button>
-        <button class="btn ghost" onclick="resetData('roster')">Hapus Data Absensi</button>
-        <button class="btn ghost" onclick="resetData('bank')">Kembalikan Soal Bawaan</button>
-        <button class="btn ghost" onclick="resetData('all')">Reset Semua Data Lokal</button>
-      </div>
-    `;
-  }
+  b.innerHTML = `
+    <div class="field"><label>Ubah PIN Mode Guru (4&ndash;8 digit)</label><input id="cPin" value="${cfg.pin}" maxlength="8"></div>
+    <button class="btn" onclick="savePin()">Simpan PIN</button>
+    
+    <!-- 🔥 TAMBAHKAN: MANAJEMEN SISWA -->
+    <div class="note warn" style="margin-top:20px">
+      <b>👤 Manajemen Siswa</b>
+    </div>
+    <div class="row" style="margin-top:10px;flex-wrap:wrap;gap:8px">
+      <button class="btn orange sm" onclick="forceLogoutStudent()">
+        🚪 Logout Siswa Sekarang
+      </button>
+      <button class="btn ghost sm" onclick="clearStudentData()">
+        🗑️ Hapus Data Siswa
+      </button>
+      <button class="btn ghost sm" onclick="showStudentInfo()">
+        👤 Info Siswa
+      </button>
+    </div>
+    <div id="studentInfo" style="margin-top:10px;font-size:13px;color:var(--muted);padding:10px;background:var(--bg);border-radius:10px;display:none"></div>
+    
+    <!-- 🔥 TAMBAHKAN: RESET DATA LOKAL -->
+    <div class="note warn" style="margin-top:20px">
+      <b>🔄 Reset Data Lokal</b> &mdash; tindakan ini tidak menghapus data yang sudah masuk ke Google Spreadsheet.
+    </div>
+    <div class="row" style="margin-top:10px;flex-wrap:wrap;gap:8px">
+      <button class="btn ghost sm" onclick="resetData('scores')">Hapus Data Skor</button>
+      <button class="btn ghost sm" onclick="resetData('roster')">Hapus Data Absensi</button>
+      <button class="btn ghost sm" onclick="resetData('bank')">Kembalikan Soal Bawaan</button>
+      <button class="btn ghost sm" onclick="resetData('all')">Reset Semua Data Lokal</button>
+    </div>
+  `;
+}
   applyPhotos();
 }
 
