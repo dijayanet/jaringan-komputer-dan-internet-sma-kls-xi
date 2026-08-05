@@ -1549,6 +1549,138 @@ function resetData(t) {
   toast('Data direset.');
   teacherTab();
 }
+  // ==================== UI HELPERS ====================
+
+// Update tombol logout di header
+function updateLogoutButton() {
+  const logoutBtn = document.getElementById('logoutBtn');
+  if (!logoutBtn) return;
+  
+  if (student) {
+    logoutBtn.style.display = 'inline-block';
+    logoutBtn.textContent = `🚪 ${student.name}`;
+    logoutBtn.title = `Logout ${student.name}`;
+  } else {
+    logoutBtn.style.display = 'none';
+  }
+}
+
+// ==================== LOGOUT SISWA ====================
+
+function logoutStudent() {
+  if (!student) {
+    toast('Tidak ada siswa yang login.');
+    return;
+  }
+  
+  const name = student.name;
+  
+  if (!confirm(`👋 Yakin ingin logout, ${name}?\n\nData skor akan tetap tersimpan.`)) {
+    return;
+  }
+  
+  try {
+    localStorage.removeItem(K.student);
+    student = null;
+    document.getElementById('gate').classList.remove('hidden');
+    go('beranda');
+    updateLogoutButton();
+    toast(`👋 Berhasil logout! Sampai jumpa, ${name}!`);
+    console.log('✅ Logout berhasil:', new Date().toLocaleString());
+  } catch (err) {
+    console.error('❌ Error logout:', err);
+    toast('⚠️ Gagal logout. Silakan refresh halaman.');
+  }
+}
+
+// ==================== FORCE LOGOUT (DARI PANEL GURU) ====================
+
+function forceLogoutStudent() {
+  if (!student) {
+    toast('Tidak ada siswa yang sedang login.');
+    return;
+  }
+  
+  const name = student.name;
+  const grade = student.grade;
+  
+  if (!confirm(`⚠️ Yakin ingin logout siswa berikut?\n\nNama: ${name}\nKelas: ${grade}\n\nSiswa akan diminta login ulang.`)) {
+    return;
+  }
+  
+  try {
+    const studentName = student.name;
+    localStorage.removeItem(K.student);
+    student = null;
+    document.getElementById('gate').classList.remove('hidden');
+    go('beranda');
+    updateLogoutButton();
+    toast(`👋 ${studentName} berhasil di-logout oleh guru.`);
+    console.log(`✅ Guru logout siswa: ${studentName} pada ${new Date().toLocaleString()}`);
+    teacherTab();
+  } catch (err) {
+    console.error('❌ Error force logout:', err);
+    toast('⚠️ Gagal logout siswa. Silakan coba lagi.');
+  }
+}
+
+// ==================== HAPUS DATA SISWA ====================
+
+function clearStudentData() {
+  if (!student) {
+    toast('Tidak ada data siswa.');
+    return;
+  }
+  
+  const name = student.name;
+  
+  if (!confirm(`⚠️ Hapus semua data ${name}?\n\nData skor dan absensi tetap tersimpan di lokal.\n\nTindakan ini TIDAK mempengaruhi data di Google Spreadsheet.`)) {
+    return;
+  }
+  
+  try {
+    localStorage.removeItem(K.student);
+    student = null;
+    document.getElementById('gate').classList.remove('hidden');
+    go('beranda');
+    updateLogoutButton();
+    toast(`🗑️ Data siswa ${name} telah dihapus.`);
+    console.log(`🗑️ Data siswa dihapus oleh guru: ${name}`);
+    teacherTab();
+  } catch (err) {
+    console.error('❌ Error clear student data:', err);
+    toast('⚠️ Gagal menghapus data siswa.');
+  }
+}
+
+// ==================== INFO SISWA ====================
+
+function showStudentInfo() {
+  const infoDiv = document.getElementById('studentInfo');
+  if (!infoDiv) return;
+  
+  if (student) {
+    infoDiv.style.display = 'block';
+    infoDiv.innerHTML = `
+      <div style="display:grid;grid-template-columns:auto 1fr;gap:4px 12px;padding:4px 0">
+        <b>Nama:</b> <span>${student.name}</span>
+        <b>Kelas:</b> <span>${student.grade}</span>
+        <b>Alamat:</b> <span>${student.address}</span>
+        <b>Mapel:</b> <span>${student.subject}</span>
+        <b>Login:</b> <span>${new Date(student.at).toLocaleString('id-ID')}</span>
+        <b>Status:</b> <span style="color:var(--green)">✅ Aktif</span>
+      </div>
+    `;
+    toast('👤 Info siswa ditampilkan.');
+  } else {
+    infoDiv.style.display = 'block';
+    infoDiv.innerHTML = `
+      <div style="padding:8px;color:var(--muted);text-align:center">
+        ❌ Tidak ada siswa yang sedang login.
+      </div>
+    `;
+  }
+}
   // ==================== MANAJEMEN SISWA DI PANEL GURU ====================
 
 /**
