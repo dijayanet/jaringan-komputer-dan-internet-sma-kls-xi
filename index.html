@@ -461,13 +461,57 @@ const DEFAULT_BANK={
 let bank=load(K.bank,null)||JSON.parse(JSON.stringify(DEFAULT_BANK));
 
 /* =================== SHEET =================== */
-function sendToSheet(type,payload,statusEl){
-  const url=(cfg.sheetUrl||'').trim();
-  if(statusEl) statusEl.textContent='Mengirim data ke spreadsheet...';
-  if(!url){ if(statusEl) statusEl.innerHTML='<span style="color:#b6741a">Belum ada URL Google Apps Script. Data hanya tersimpan lokal.</span>'; return Promise.resolve(false);}
-  return fetch(url,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(Object.assign({type},payload))})
-    .then(()=>{if(statusEl) statusEl.innerHTML='<span style="color:#0E8F6F">&#10003; Data berhasil dikirim ke Google Spreadsheet.</span>';return true})
-    .catch(()=>{if(statusEl) statusEl.innerHTML='<span style="color:#c02626">&#10007; Gagal mengirim ke spreadsheet (data tetap tersimpan lokal).</span>';return false});
+function sendToSheet(type, payload, statusEl) {
+  const url = (cfg.sheetUrl || '').trim();
+  
+  if (statusEl) statusEl.textContent = 'Mengirim data ke spreadsheet...';
+  
+  if (!url) {
+    if (statusEl) {
+      statusEl.innerHTML = `
+        <span style="color:#b6741a">
+          ⚠️ Belum ada URL Google Apps Script. 
+          <br>Set URL di <b>Mode Guru → Google Spreadsheet</b>
+        </span>
+      `;
+    }
+    console.warn("⚠️ URL tidak ditemukan! Data hanya tersimpan di localStorage.");
+    return Promise.resolve(false);
+  }
+  
+  // Log data yang akan dikirim
+  console.log(`📤 Mengirim data ${type}:`, payload);
+  
+  return fetch(url, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ type, ...payload })
+  })
+  .then(() => {
+    if (statusEl) {
+      statusEl.innerHTML = `
+        <span style="color:#0E8F6F">
+          ✅ Data berhasil dikirim ke Google Spreadsheet.
+          <br><small>Cek tab "${type === 'absensi' ? 'Absensi' : 'Skor'}" di spreadsheet.</small>
+        </span>
+      `;
+    }
+    console.log(`✅ Data ${type} berhasil dikirim!`);
+    return true;
+  })
+  .catch((err) => {
+    console.error(`❌ Gagal mengirim data ${type}:`, err);
+    if (statusEl) {
+      statusEl.innerHTML = `
+        <span style="color:#c02626">
+          ❌ Gagal mengirim ke spreadsheet.
+          <br><small>Periksa URL dan koneksi internet.</small>
+        </span>
+      `;
+    }
+    return false;
+  });
 }
 
 /* =================== GATE =================== */
@@ -947,6 +991,23 @@ applyIdentity();applyPhotos();buildNav();
 checkUnlockedGames();
 
 if(student){gate.classList.add('hidden');go('beranda')}
+  /* =================== AUTO-INIT SHEET URL =================== */
+(function initSheetUrl() {
+  // Cek apakah ada URL yang tersimpan
+  if (!cfg.sheetUrl) {
+    console.warn("⚠️ URL Google Spreadsheet belum di-set!");
+    console.log("📝 Silakan set URL di Mode Guru → Google Spreadsheet");
+  } else {
+    console.log("✅ URL Google Spreadsheet:", cfg.sheetUrl);
+  }
+  
+  // Cek data scores
+  const savedScores = load(K.scores, []);
+  if (savedScores.length > 0) {
+    console.log(`📊 Ada ${savedScores.length} data skor tersimpan di lokal.`);
+    console.log("💡 Jika URL sudah di-set, data akan otomatis terkirim saat kuis selesai.");
+  }
+})();
 </script>
 </body>
 </html>
