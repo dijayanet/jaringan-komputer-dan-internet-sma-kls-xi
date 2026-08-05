@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Jaringan Komputer - Informatika SMA Kelas X</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --blue:#0B5FA5; --blue-dark:#083F6E; --blue-soft:#E7F1FA;
+  --green:#0E8F6F; --green-soft:#E4F6F0;
+  --orange:#F97316; --orange-dark:#DC6407;
+  --ink:#0F2233; --muted:#5B7288; --line:#DCE6EE; --bg:#F4F8FB; --white:#fff;
+  --radius:16px; --shadow:0 10px 30px -12px rgba(11,95,165,.28);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.65}
+button{font-family:inherit;cursor:pointer;border:0}
+input,select,textarea{font-family:inherit;font-size:14px}
+.hidden{display:none !important}
+
+/* ===== HEADER ===== */
+header{position:sticky;top:0;z-index:40;background:linear-gradient(105deg,var(--blue-dark),var(--blue) 55%,var(--green));color:#fff;box-shadow:var(--shadow)}
+.hwrap{max-width:1280px;margin:0 auto;padding:12px 16px;display:flex;align-items:center;gap:14px}
+.brand{display:flex;align-items:center;gap:12px;min-width:0}
+.avatar{width:46px;height:46px;border-radius:50%;object-fit:cover;background:rgba(255,255,255,.2);border:2px solid rgba(255,255,255,.6);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;text-align:center;flex:0 0 auto}
+.brand h1{font-size:16px;font-weight:800;letter-spacing:.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brand p{font-size:11.5px;opacity:.85}
+.hspace{flex:1}
+.hbtn{background:rgba(255,255,255,.16);color:#fff;padding:8px 13px;border-radius:10px;font-size:12.5px;font-weight:600;backdrop-filter:blur(4px)}
+.hbtn:hover{background:rgba(255,255,255,.3)}
+.hbtn.cta{background:var(--orange)}
+.hbtn.cta:hover{background:var(--orange-dark)}
+#menuBtn{display:none}
+
+/* ===== LAYOUT ===== */
+.layout{max-width:1280px;margin:0 auto;display:grid;grid-template-columns:290px 1fr;gap:20px;padding:20px 16px 60px}
+aside{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:14px;height:fit-content;position:sticky;top:82px;max-height:calc(100vh - 100px);overflow:auto}
+.sb-title{font-size:11px;font-weight:800;letter-spacing:1.4px;color:var(--muted);text-transform:uppercase;margin:14px 8px 6px}
+.sb-title:first-child{margin-top:4px}
+.navitem{display:flex;align-items:center;gap:9px;width:100%;text-align:left;background:transparent;color:var(--ink);padding:9px 11px;border-radius:10px;font-size:13.5px;font-weight:500}
+.navitem:hover{background:var(--blue-soft)}
+.navitem.active{background:linear-gradient(90deg,var(--blue),var(--green));color:#fff;font-weight:700}
+.navitem .dot{width:7px;height:7px;border-radius:50%;background:var(--line);flex:0 0 auto}
+.navitem.done .dot{background:var(--green)}
+.navitem.active .dot{background:#fff}
+.sub{padding-left:16px}
+
+.progwrap{background:var(--blue-soft);border-radius:12px;padding:11px 12px;margin-bottom:6px}
+.progwrap b{font-size:12px}
+.bar{height:8px;background:#fff;border-radius:99px;overflow:hidden;margin-top:7px}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--blue),var(--green));width:0;transition:width .4s}
+
+main{min-width:0}
+.card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:22px;margin-bottom:18px;box-shadow:0 1px 2px rgba(15,34,51,.04)}
+.card h2{font-size:22px;font-weight:800;color:var(--blue-dark);margin-bottom:4px}
+.card h3{font-size:16px;font-weight:700;margin:18px 0 8px;color:var(--blue-dark)}
+.eyebrow{font-size:11px;font-weight:800;letter-spacing:1.4px;color:var(--green);text-transform:uppercase}
+.lead{color:var(--muted);font-size:14.5px;margin-top:8px}
+ul.points{margin:8px 0 0 18px}
+ul.points li{margin:5px 0;font-size:14.5px}
+table{width:100%;border-collapse:collapse;margin-top:10px;font-size:14px;overflow:hidden;border-radius:12px}
+th{background:var(--blue-soft);color:var(--blue-dark);text-align:left;padding:10px;font-size:12.5px;letter-spacing:.4px}
+td{padding:10px;border-top:1px solid var(--line);vertical-align:top}
+th:last-child{background:var(--green-soft);color:#0a6a53}
+.figure{background:linear-gradient(180deg,#fbfdff,#f2f7fb);border:1px dashed var(--line);border-radius:14px;padding:14px;margin:14px 0;text-align:center}
+.figure svg{max-width:100%;height:auto}
+.figcap{font-size:12px;color:var(--muted);margin-top:8px}
+.btn{background:var(--blue);color:#fff;padding:11px 18px;border-radius:11px;font-weight:700;font-size:14px}
+.btn:hover{background:var(--blue-dark)}
+.btn.orange{background:var(--orange)}.btn.orange:hover{background:var(--orange-dark)}
+.btn.green{background:var(--green)}
+.btn.ghost{background:#fff;color:var(--blue);border:1.5px solid var(--line)}
+.btn.sm{padding:7px 12px;font-size:12.5px;border-radius:9px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.field{margin-bottom:12px}
+.field label{display:block;font-size:12.5px;font-weight:700;margin-bottom:5px;color:var(--ink)}
+.field input,.field select,.field textarea{width:100%;padding:11px 12px;border:1.5px solid var(--line);border-radius:11px;background:#fff;outline:none}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--blue)}
+.err{color:#c02626;font-size:12px;margin-top:4px}
+.badge{display:inline-block;background:var(--green-soft);color:#0a6a53;padding:4px 10px;border-radius:99px;font-size:11.5px;font-weight:700}
+.badge.blue{background:var(--blue-soft);color:var(--blue-dark)}
+.badge.orange{background:#FFF0E4;color:var(--orange-dark)}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.tile{border:1px solid var(--line);border-radius:14px;padding:14px;background:#fff}
+.note{background:var(--green-soft);border-left:4px solid var(--green);padding:12px 14px;border-radius:0 12px 12px 0;font-size:13.5px;margin-top:12px}
+.note.warn{background:#FFF6E9;border-color:var(--orange)}
+
+/* quiz */
+.q{border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px}
+.q p.qt{font-weight:700;font-size:14.5px;margin-bottom:9px}
+.opt{display:flex;gap:9px;align-items:flex-start;padding:9px 11px;border:1.5px solid var(--line);border-radius:11px;margin-bottom:7px;cursor:pointer;font-size:14px;background:#fff}
+.opt:hover{border-color:var(--blue)}
+.opt.sel{border-color:var(--blue);background:var(--blue-soft)}
+.opt.ok{border-color:var(--green);background:var(--green-soft)}
+.opt.no{border-color:#e05252;background:#FDECEC}
+.expl{font-size:13px;background:var(--blue-soft);padding:9px 11px;border-radius:10px;margin-top:6px;color:var(--blue-dark)}
+.scorebox{text-align:center;padding:20px;border-radius:16px;background:linear-gradient(135deg,var(--blue-soft),var(--green-soft))}
+.scorebox .num{font-size:46px;font-weight:800;color:var(--blue-dark);line-height:1}
+
+/* modal */
+.overlay{position:fixed;inset:0;background:rgba(8,30,50,.75);backdrop-filter:blur(6px);z-index:100;display:flex;align-items:center;justify-content:center;padding:16px;overflow:auto}
+.modal{background:#fff;border-radius:20px;max-width:520px;width:100%;padding:24px;box-shadow:0 30px 70px -20px rgba(0,0,0,.5);margin:auto}
+.modal.wide{max-width:1000px}
+.modal h2{font-size:20px;color:var(--blue-dark);font-weight:800}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin:14px 0}
+.tab{padding:8px 13px;border-radius:99px;background:var(--bg);font-size:12.5px;font-weight:700;color:var(--muted)}
+.tab.active{background:var(--blue);color:#fff}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:12px 18px;border-radius:12px;font-size:13.5px;z-index:200;box-shadow:var(--shadow)}
+.tblwrap{overflow:auto;max-height:50vh;border:1px solid var(--line);border-radius:12px}
+footer{background:var(--blue-dark);color:#fff;padding:26px 16px;text-align:center;font-size:13px}
+footer b{color:#fff}
+footer span{opacity:.75}
+
+@media(max-width:900px){
+  .layout{grid-template-columns:1fr;padding:14px 12px 50px}
+  aside{position:fixed;inset:0 auto 0 0;width:280px;z-index:60;border-radius:0;max-height:100vh;transform:translateX(-105%);transition:transform .28s;box-shadow:var(--shadow)}
+  aside.open{transform:none}
+  #menuBtn{display:inline-block}
+  .brand h1{font-size:14px;max-width:150px}
+  .card{padding:16px}
+  .card h2{font-size:19px}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ GATE ABSENSI ============ -->
+<div class="overlay" id="gate">
+  <div class="modal">
+    <div style="text-align:center">
+      <div style="width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,var(--blue),var(--green));margin:0 auto 10px;display:flex;align-items:center;justify-content:center">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="2" y="3" width="20" height="12" rx="2"/><path d="M8 21h8M12 15v6"/></svg>
+      </div>
+      <span class="eyebrow">Informatika SMA</span>
+      <h2>Absensi Masuk Siswa</h2>
+      <p style="font-size:13.5px;color:var(--muted);margin-top:6px">Isi data berikut untuk mulai belajar materi <b>Jaringan Komputer</b>.</p>
+    </div>
+    <div style="margin-top:18px">
+      <div class="field"><label>Nama Lengkap Siswa *</label><input id="gName" placeholder="Contoh: Aisyah Nur Fadhilah"><div class="err hidden" id="eName">Nama wajib diisi.</div></div>
+      <div class="row" style="gap:10px">
+        <div class="field" style="flex:1;min-width:130px"><label>Kelas *</label>
+          <select id="gGrade"><option value="">Pilih kelas</option><option>X</option><option>XI</option><option>XII</option></select>
+          <div class="err hidden" id="eGrade">Kelas wajib dipilih.</div>
+        </div>
+        <div class="field" style="flex:1;min-width:130px"><label>Rombel / Jurusan</label><input id="gRombel" placeholder="Contoh: X-1 / IPA 2"></div>
+      </div>
+      <div class="field"><label>Alamat *</label><input id="gAddr" placeholder="Contoh: Jatiwangi, Majalengka"><div class="err hidden" id="eAddr">Alamat wajib diisi.</div></div>
+      <div class="field"><label>Mata Pelajaran</label><input id="gSubject" value="Informatika" readonly style="background:var(--bg);color:var(--muted)"></div>
+      <button class="btn orange" style="width:100%" onclick="submitGate()">Mulai Belajar</button>
+      <p id="gateStatus" style="font-size:12px;color:var(--muted);text-align:center;margin-top:10px"></p>
+      <p style="font-size:11.5px;color:var(--muted);text-align:center;margin-top:8px">Data absensi dikirim ke spreadsheet guru &amp; disimpan di perangkat ini.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============ HEADER ============ -->
+<header>
+  <div class="hwrap">
+    <button class="hbtn" id="menuBtn" onclick="toggleSidebar()">&#9776;</button>
+    <div class="brand">
+      <div class="avatar" id="schoolLogo">LOGO<br>SEKOLAH</div>
+      <div class="avatar" id="teacherPhoto">FOTO<br>GURU</div>
+      <div style="min-width:0">
+        <h1 id="hTeacher">Ramdan Ahmad Dijaya, S.Pd</h1>
+        <p><span id="hRole">Guru Informatika</span> &middot; <span id="hClasses">Kelas X, XI, XII SMA</span></p>
+      </div>
+    </div>
+    <div class="hspace"></div>
+    <button class="hbtn" onclick="go('petunjuk')">Petunjuk</button>
+    <button class="hbtn" onclick="openTeacher()">Mode Guru</button>
+  </div>
+</header>
+
+<!-- ============ LAYOUT ============ -->
+<div class="layout">
+  <aside id="sidebar">
+    <div class="progwrap"><b>Progres Belajar</b><div class="bar"><i id="progBar"></i></div>
+      <div style="font-size:11.5px;color:var(--muted);margin-top:6px" id="progText">0 dari 0 materi selesai</div></div>
+    <div id="navList"></div>
+  </aside>
+  <main id="main"></main>
+</div>
+
+<footer>
+  <b id="fTeacher">Ramdan Ahmad Dijaya, S.Pd</b><br>
+  <span id="fRole">Guru Informatika</span> &mdash; <span id="fClasses">Mengajar Kelas X, XI, dan XII SMA</span><br>
+  <span id="fSchool">SMA &middot; Mata Pelajaran Informatika</span><br>
+  <span style="font-size:11.5px">&copy; <span id="year"></span> Modul Interaktif Jaringan Komputer</span>
+</footer>
+
+<script>
+/* =================== STORAGE =================== */
+const K={cfg:'jk_cfg',student:'jk_student',scores:'jk_scores',prog:'jk_prog',bank:'jk_bank',roster:'jk_roster'};
+const load=(k,d)=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}};
+const save=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
+let cfg=load(K.cfg,{teacher:'Ramdan Ahmad Dijaya, S.Pd',role:'Guru Informatika',classes:'Kelas X, XI, XII SMA',school:'SMA &middot; Mata Pelajaran Informatika',pin:'1234',sheetUrl:'',photo:'',logo:''});
+let student=load(K.student,null);
+let scores=load(K.scores,[]);
+let prog=load(K.prog,{});
+let roster=load(K.roster,[]);
+
+function toast(msg,ms=2600){const t=document.createElement('div');t.className='toast';t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),ms)}
+
+/* =================== DIAGRAM SVG =================== */
+const PC=(x,y,label,c='#0B5FA5')=>`<g><rect x="${x-22}" y="${y-16}" width="44" height="30" rx="4" fill="${c}"/><rect x="${x-16}" y="${y-11}" width="32" height="20" rx="2" fill="#fff" opacity=".85"/><rect x="${x-9}" y="${y+14}" width="18" height="4" rx="2" fill="${c}"/><text x="${x}" y="${y+31}" font-size="10" text-anchor="middle" fill="#0F2233" font-family="sans-serif">${label}</text></g>`;
+const SRV=(x,y,label)=>`<g><rect x="${x-20}" y="${y-24}" width="40" height="48" rx="5" fill="#0E8F6F"/><rect x="${x-13}" y="${y-17}" width="26" height="6" rx="2" fill="#fff" opacity=".8"/><rect x="${x-13}" y="${y-6}" width="26" height="6" rx="2" fill="#fff" opacity=".55"/><circle cx="${x+8}" cy="${y+12}" r="3" fill="#F97316"/><text x="${x}" y="${y+40}" font-size="10" text-anchor="middle" fill="#0F2233" font-family="sans-serif">${label}</text></g>`;
+const HUB=(x,y,label)=>`<g><rect x="${x-30}" y="${y-14}" width="60" height="28" rx="6" fill="#F97316"/><circle cx="${x-15}" cy="${y}" r="3" fill="#fff"/><circle cx="${x-5}" cy="${y}" r="3" fill="#fff"/><circle cx="${x+5}" cy="${y}" r="3" fill="#fff"/><circle cx="${x+15}" cy="${y}" r="3" fill="#fff"/><text x="${x}" y="${y+28}" font-size="10" text-anchor="middle" fill="#0F2233" font-family="sans-serif">${label}</text></g>`;
+const LN=(x1,y1,x2,y2,c='#5B7288',w=2.5)=>`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${c}" stroke-width="${w}" stroke-linecap="round"/>`;
+const svg=(w,h,inner)=>`<svg viewBox="0 0 ${w} ${h}" width="100%" style="max-width:${w}px">${inner}</svg>`;
+
+const DIAG={
+ skala:()=>svg(620,300,`
+  ${[['WAN','#083F6E',140,'Antar negara / benua'],['MAN','#0B5FA5',105,'Satu kota'],['LAN','#0E8F6F',70,'Gedung / sekolah'],['PAN','#F97316',35,'Sekitar 1 orang (10 m)']].map(([t,c,r,d],i)=>
+   `<circle cx="310" cy="150" r="${r}" fill="${c}" opacity="${0.14+i*0.06}" stroke="${c}" stroke-width="2"/>
+    <text x="310" y="${150-r+16}" font-size="12" font-weight="bold" text-anchor="middle" fill="${c}" font-family="sans-serif">${t}</text>`).join('')}
+  <circle cx="310" cy="150" r="9" fill="#0F2233"/>
+  <text x="310" y="176" font-size="9" text-anchor="middle" fill="#0F2233" font-family="sans-serif">Pengguna</text>
+  ${[['PAN &le; 10 m','#F97316',30],['LAN 1 gedung','#0E8F6F',52],['MAN 1 kota','#0B5FA5',74],['WAN antar negara','#083F6E',96]].map(([t,c,y])=>
+   `<rect x="14" y="${y-11}" width="12" height="12" rx="3" fill="${c}"/><text x="32" y="${y}" font-size="11" fill="#0F2233" font-family="sans-serif">${t}</text>`).join('')}`),
+ p2p:()=>svg(560,260,`
+  ${LN(120,80,440,80)}${LN(120,190,440,190)}${LN(120,80,120,190)}${LN(440,80,440,190)}${LN(120,80,440,190,'#B9CBD9',2)}${LN(440,80,120,190,'#B9CBD9',2)}
+  ${PC(120,80,'PC 1')}${PC(440,80,'PC 2')}${PC(120,190,'PC 3')}${PC(440,190,'PC 4')}
+  <text x="280" y="140" font-size="12" text-anchor="middle" fill="#0E8F6F" font-family="sans-serif" font-weight="bold">Semua komputer setara (bisa jadi client &amp; server)</text>`),
+ cs:()=>svg(560,280,`
+  ${LN(280,90,90,210)}${LN(280,90,215,210)}${LN(280,90,345,210)}${LN(280,90,470,210)}
+  ${SRV(280,70,'Server Pusat')}
+  ${PC(90,210,'Client 1')}${PC(215,210,'Client 2')}${PC(345,210,'Client 3')}${PC(470,210,'Client 4')}
+  <text x="280" y="160" font-size="11" text-anchor="middle" fill="#5B7288" font-family="sans-serif">permintaan (request) / balasan (response)</text>`),
+ bus:()=>svg(560,220,`
+  ${LN(40,110,520,110,'#0F2233',6)}
+  <circle cx="40" cy="110" r="7" fill="#F97316"/><circle cx="520" cy="110" r="7" fill="#F97316"/>
+  <text x="40" y="136" font-size="9" text-anchor="middle" fill="#5B7288" font-family="sans-serif">terminator</text>
+  <text x="520" y="136" font-size="9" text-anchor="middle" fill="#5B7288" font-family="sans-serif">terminator</text>
+  ${[130,250,370,460].map((x,i)=>LN(x,110,x,i%2?170:50)).join('')}
+  ${PC(130,40,'PC 1')}${PC(250,180,'PC 2')}${PC(370,40,'PC 3')}${PC(460,180,'PC 4')}
+  <text x="280" y="104" font-size="11" text-anchor="middle" fill="#0B5FA5" font-family="sans-serif" font-weight="bold">Kabel utama (backbone)</text>`),
+ ring:()=>svg(560,300,`
+  <circle cx="280" cy="150" r="105" fill="none" stroke="#0B5FA5" stroke-width="5"/>
+  <path d="M280 35 l10 -12 M280 35 l-10 -12" stroke="#F97316" stroke-width="3" fill="none"/>
+  ${PC(280,45,'PC 1')}${PC(385,150,'PC 2')}${PC(280,255,'PC 3')}${PC(175,150,'PC 4')}
+  <text x="280" y="150" font-size="11" text-anchor="middle" fill="#0E8F6F" font-family="sans-serif" font-weight="bold">Data berputar satu arah (token)</text>`),
+ star:()=>svg(560,300,`
+  ${[[100,60],[280,50],[460,60],[100,240],[280,255],[460,240]].map(([x,y])=>LN(280,150,x,y)).join('')}
+  ${HUB(280,150,'Hub / Switch')}
+  ${PC(100,60,'PC 1')}${PC(280,50,'PC 2')}${PC(460,60,'PC 3')}${PC(100,240,'PC 4')}${PC(280,255,'PC 5')}${PC(460,240,'PC 6')}`),
+ mesh:()=>{const p=[[280,50],[470,150],[400,265],[160,265],[90,150]];let l='';for(let i=0;i<p.length;i++)for(let j=i+1;j<p.length;j++)l+=LN(p[i][0],p[i][1],p[j][0],p[j][1],'#9FB8CA',2);
+  return svg(560,320,l+p.map((c,i)=>PC(c[0],c[1],'PC '+(i+1))).join('')+`<text x="280" y="160" font-size="11" text-anchor="middle" fill="#0E8F6F" font-family="sans-serif" font-weight="bold">Setiap node terhubung ke semua node</text>`)},
+ tree:()=>svg(600,330,`
+  ${LN(300,60,160,150)}${LN(300,60,440,150)}
+  ${LN(160,150,80,255)}${LN(160,150,240,255)}${LN(440,150,360,255)}${LN(440,150,520,255)}
+  ${SRV(300,45,'Server / Switch Pusat')}
+  ${HUB(160,150,'Switch A')}${HUB(440,150,'Switch B')}
+  ${PC(80,255,'PC 1')}${PC(240,255,'PC 2')}${PC(360,255,'PC 3')}${PC(520,255,'PC 4')}`),
+ hybrid:()=>svg(620,330,`
+  ${LN(60,170,560,170,'#0F2233',5)}
+  <text x="310" y="160" font-size="10" text-anchor="middle" fill="#5B7288" font-family="sans-serif">jalur bus penghubung</text>
+  ${LN(160,170,160,110)}${[[70,60],[160,40],[250,60]].map(([x,y])=>LN(160,110,x,y)).join('')}
+  ${HUB(160,110,'Switch (Star)')}${PC(70,55,'PC 1')}${PC(160,35,'PC 2')}${PC(250,55,'PC 3')}
+  <circle cx="450" cy="255" r="55" fill="none" stroke="#0B5FA5" stroke-width="4"/>
+  ${LN(450,200,450,170)}
+  ${PC(450,200,'PC 4')}${PC(505,255,'PC 5')}${PC(450,310,'PC 6')}${PC(395,255,'PC 7')}
+  <text x="450" y="255" font-size="10" text-anchor="middle" fill="#0E8F6F" font-family="sans-serif" font-weight="bold">Ring</text>`)
+};
+
+/* =================== MATERI =================== */
+const pros=(a,b)=>`<table><tr><th>Kelebihan</th><th>Kekurangan</th></tr>${a.map((x,i)=>`<tr><td>${x}</td><td>${b[i]||'-'}</td></tr>`).join('')}</table>`;
+const li=a=>`<ul class="points">${a.map(x=>`<li>${x}</li>`).join('')}</ul>`;
+
+const MATERI=[
+ {id:'pan',group:'1. Jenis-jenis Jaringan',title:'a. Personal Area Network (PAN)',
+  body:()=>`<p class="lead">PAN adalah jaringan berskala paling kecil yang menghubungkan perangkat pribadi di sekitar satu orang, jangkauannya kira-kira hanya 1&ndash;10 meter. Contohnya HP tersambung ke earphone Bluetooth, smartwatch, atau printer lewat hotspot pribadi.</p>
+  <h3>Ciri-ciri PAN</h3>${li(['Jangkauan sangat pendek, sekitar 1&ndash;10 meter.','Menghubungkan perangkat milik satu orang (HP, laptop, earbud, smartwatch).','Umumnya nirkabel: Bluetooth, Infrared, NFC, atau Wi-Fi Direct.','Biaya sangat murah dan tidak perlu perangkat jaringan khusus.','Kecepatan transfer relatif rendah dan jumlah perangkat sedikit.'])}
+  <div class="figure">${DIAG.skala()}<div class="figcap">Perbandingan skala jangkauan PAN, LAN, MAN, dan WAN</div></div>`},
+ {id:'lan',group:'1. Jenis-jenis Jaringan',title:'b. Local Area Network (LAN)',
+  body:()=>`<p class="lead">LAN menghubungkan komputer dalam satu area terbatas seperti ruang lab komputer, satu gedung sekolah, atau kantor. LAN adalah jaringan yang paling sering kamu temui di sekolah.</p>
+  <h3>Ciri-ciri LAN</h3>${li(['Cakupan area terbatas: satu ruang, gedung, atau kompleks sekolah (hingga ~1 km).','Kecepatan transfer data tinggi (100 Mbps &ndash; 1 Gbps atau lebih).','Dikelola sendiri oleh pemilik (sekolah/kantor), bukan operator telekomunikasi.','Menggunakan kabel UTP/switch atau Wi-Fi (WLAN).','Biaya operasional murah dan tingkat kesalahan (error) rendah.','Memudahkan berbagi printer, file, dan koneksi internet.'])}
+  <div class="figure">${DIAG.star()}<div class="figcap">Contoh LAN di lab sekolah: beberapa PC terhubung ke satu switch</div></div>`},
+ {id:'man',group:'1. Jenis-jenis Jaringan',title:'c. Metropolitan Area Network (MAN)',
+  body:()=>`<p class="lead">MAN adalah gabungan beberapa LAN dalam satu kota atau wilayah metropolitan, misalnya jaringan yang menghubungkan seluruh kantor dinas pendidikan dengan sekolah-sekolah di satu kabupaten.</p>
+  <h3>Ciri-ciri MAN</h3>${li(['Cakupan satu kota/kabupaten, sekitar 10&ndash;50 km.','Merupakan gabungan dari beberapa jaringan LAN.','Kecepatan tinggi, biasanya memakai kabel fiber optic atau radio/microwave.','Pengelolaan lebih kompleks dan biaya lebih mahal dari LAN.','Sering dikelola bersama oleh pemerintah daerah atau penyedia layanan.','Perbaikan jika rusak membutuhkan waktu lebih lama.'])}
+  <div class="figure">${DIAG.tree()}<div class="figcap">Skema MAN: beberapa LAN (switch) terhubung ke pusat kota</div></div>`},
+ {id:'wan',group:'1. Jenis-jenis Jaringan',title:'d. Wide Area Network (WAN)',
+  body:()=>`<p class="lead">WAN mencakup wilayah yang sangat luas: antar kota, antar pulau, bahkan antar negara. Internet adalah contoh WAN terbesar di dunia.</p>
+  <h3>Ciri-ciri WAN</h3>${li(['Jangkauan sangat luas: antar kota, negara, hingga benua.','Menggunakan media satelit, kabel laut (submarine cable), dan fiber optic jarak jauh.','Dikelola oleh operator/ISP, bukan oleh pengguna sendiri.','Biaya pembangunan dan sewa paling mahal.','Kecepatan relatif lebih rendah dan latency (jeda) lebih besar dibanding LAN.','Rentan gangguan karena melewati banyak perangkat perantara.'])}
+  <div class="figure">${DIAG.skala()}<div class="figcap">WAN berada pada lingkaran terluar dari skala jaringan</div></div>`},
+ {id:'p2p',group:'2. Arsitektur Jaringan',title:'a. Peer-to-Peer (P2P)',
+  body:()=>`<p class="lead">Pada arsitektur peer-to-peer, semua komputer berkedudukan setara. Setiap komputer bisa berperan sebagai penyedia layanan (server) sekaligus pengguna layanan (client). Cocok untuk jaringan kecil, misalnya berbagi file antar 3&ndash;5 komputer di ruang guru.</p>
+  <h3>Ciri-ciri Peer-to-peer</h3>${li(['Tidak ada komputer pusat; semua node berkedudukan sama.','Setiap komputer dapat berbagi sumber daya (file, printer) secara langsung.','Pengaturan keamanan diatur masing-masing komputer.','Tidak memerlukan administrator jaringan khusus.','Ideal untuk jaringan kecil (di bawah 10 komputer).'])}
+  <div class="figure">${DIAG.p2p()}<div class="figcap">Diagram peer-to-peer: setiap komputer saling terhubung setara</div></div>
+  ${pros(['Biaya murah, tidak perlu membeli server.','Instalasi dan konfigurasi sederhana.','Jika satu komputer mati, yang lain tetap bisa bekerja.','Tidak butuh administrator khusus.'],['Keamanan lemah karena diatur sendiri-sendiri.','Sulit dikelola bila komputer bertambah banyak.','Backup data harus dilakukan di tiap komputer.','Performa turun jika satu komputer diakses banyak pengguna.'])}`},
+ {id:'cs',group:'2. Arsitektur Jaringan',title:'b. Client Server',
+  body:()=>`<p class="lead">Pada arsitektur client-server, ada satu (atau beberapa) komputer khusus bernama server yang melayani permintaan dari komputer client. Contohnya server absensi sekolah, web server, atau server penyimpanan nilai.</p>
+  <h3>Ciri-ciri Client Server</h3>${li(['Terdapat komputer pusat (server) dengan spesifikasi lebih tinggi.','Client mengirim permintaan (request), server membalas (response).','Data dan hak akses terpusat sehingga keamanan lebih terjaga.','Membutuhkan administrator jaringan untuk mengelola server.','Cocok untuk jaringan menengah hingga besar.'])}
+  <div class="figure">${DIAG.cs()}<div class="figcap">Diagram client-server: satu server pusat melayani banyak client</div></div>
+  ${pros(['Keamanan dan hak akses terpusat.','Backup data cukup dilakukan di server.','Mampu menampung banyak pengguna.','Administrasi jaringan lebih mudah dikontrol.'],['Biaya lebih mahal (perangkat server + lisensi).','Jika server mati, seluruh layanan terhenti.','Butuh tenaga administrator yang terampil.','Konfigurasi awal lebih rumit.'])}`},
+ {id:'bus',group:'3. Topologi Fisik',title:'1. Topologi Bus',
+  body:()=>`<p class="lead">Topologi bus menghubungkan semua komputer pada satu jalur kabel utama (backbone) dengan terminator di kedua ujungnya.</p>
+  <h3>Karakteristik</h3>${li(['Menggunakan satu kabel utama sebagai jalur bersama.','Kedua ujung kabel diberi terminator agar sinyal tidak memantul.','Data dikirim ke semua node, hanya alamat tujuan yang memprosesnya.','Sering memakai kabel coaxial (teknologi lama).'])}
+  <div class="figure">${DIAG.bus()}<div class="figcap">Diagram topologi Bus</div></div>
+  ${pros(['Hemat kabel dan biaya paling murah.','Instalasi sederhana.','Mudah menambah node baru di sepanjang jalur.'],['Jika kabel utama putus, seluruh jaringan mati.','Sering terjadi tabrakan data (collision).','Sulit mendeteksi letak kerusakan.','Kecepatan menurun jika node bertambah banyak.'])}`},
+ {id:'ring',group:'3. Topologi Fisik',title:'2. Topologi Ring',
+  body:()=>`<p class="lead">Pada topologi ring, setiap komputer terhubung membentuk lingkaran tertutup. Data mengalir satu arah melewati tiap node menggunakan sistem token.</p>
+  <h3>Karakteristik</h3>${li(['Bentuk jaringan melingkar tanpa ujung.','Data mengalir satu arah (atau dua arah pada dual ring).','Menggunakan token untuk mengatur giliran pengiriman data.','Setiap node bertindak sebagai repeater penguat sinyal.'])}
+  <div class="figure">${DIAG.ring()}<div class="figcap">Diagram topologi Ring</div></div>
+  ${pros(['Tidak terjadi tabrakan data karena memakai token.','Hemat kabel dibanding star dan mesh.','Performa stabil walau lalu lintas data padat.'],['Satu node rusak dapat melumpuhkan seluruh jaringan.','Sulit melakukan penambahan/pengurangan node.','Troubleshooting lebih rumit.','Pengiriman data harus melewati banyak node.'])}`},
+ {id:'starT',group:'3. Topologi Fisik',title:'3. Topologi Star',
+  body:()=>`<p class="lead">Topologi star menempatkan hub/switch sebagai pusat, dan setiap komputer memiliki kabel sendiri menuju pusat tersebut. Ini topologi paling umum di sekolah dan kantor.</p>
+  <h3>Karakteristik</h3>${li(['Ada perangkat pusat berupa hub atau switch.','Setiap node memiliki kabel sendiri (point-to-point) ke pusat.','Semua komunikasi antar node melewati perangkat pusat.','Umumnya memakai kabel UTP dengan konektor RJ-45.'])}
+  <div class="figure">${DIAG.star()}<div class="figcap">Diagram topologi Star</div></div>
+  ${pros(['Mudah menambah atau melepas node.','Kerusakan satu kabel hanya memengaruhi satu node.','Deteksi kerusakan mudah dilakukan.','Kecepatan tinggi dan minim tabrakan data (jika memakai switch).'],['Boros kabel karena tiap node punya jalur sendiri.','Sangat bergantung pada hub/switch pusat.','Jika perangkat pusat rusak, seluruh jaringan mati.','Biaya lebih mahal dari bus.'])}`},
+ {id:'mesh',group:'3. Topologi Fisik',title:'4. Topologi Mesh',
+  body:()=>`<p class="lead">Pada topologi mesh, setiap node terhubung langsung ke semua node lain sehingga tersedia banyak jalur cadangan. Biasa dipakai pada jaringan penting seperti perbankan.</p>
+  <h3>Karakteristik</h3>${li(['Setiap node punya koneksi langsung ke node lain (full mesh).','Jumlah kabel dihitung dengan rumus n(n-1)/2.','Memiliki banyak jalur alternatif jika satu jalur putus.','Digunakan pada jaringan yang menuntut keandalan tinggi.'])}
+  <div class="figure">${DIAG.mesh()}<div class="figcap">Diagram topologi Mesh</div></div>
+  ${pros(['Sangat andal, ada jalur cadangan bila satu putus.','Pengiriman data cepat dan langsung ke tujuan.','Keamanan dan privasi jalur lebih baik.','Mudah mendeteksi jalur yang bermasalah.'],['Butuh sangat banyak kabel dan port jaringan.','Biaya instalasi paling mahal.','Instalasi dan pemeliharaan rumit.','Butuh ruang kabel yang besar.'])}`},
+ {id:'tree',group:'3. Topologi Fisik',title:'5. Topologi Tree',
+  body:()=>`<p class="lead">Topologi tree (pohon) adalah gabungan beberapa topologi star yang dihubungkan bertingkat/hierarkis. Cocok untuk sekolah bertingkat atau perusahaan dengan banyak divisi.</p>
+  <h3>Karakteristik</h3>${li(['Berbentuk hierarki: pusat (root), cabang (switch), lalu node.','Gabungan dari beberapa topologi star.','Komunikasi antar cabang harus melewati perangkat di atasnya.','Mudah dikembangkan menjadi jaringan besar.'])}
+  <div class="figure">${DIAG.tree()}<div class="figcap">Diagram topologi Tree</div></div>
+  ${pros(['Mudah dikembangkan untuk jaringan besar.','Pengelolaan per kelompok/divisi lebih rapi.','Kerusakan pada satu cabang tidak mengganggu cabang lain.','Deteksi kesalahan relatif mudah.'],['Jika perangkat pusat (root) rusak, seluruh jaringan terganggu.','Menggunakan banyak kabel.','Konfigurasi lebih rumit dari star.','Biaya perawatan lebih tinggi.'])}`},
+ {id:'hybrid',group:'3. Topologi Fisik',title:'6. Topologi Hybrid',
+  body:()=>`<p class="lead">Topologi hybrid adalah gabungan dua atau lebih topologi berbeda, misalnya star digabung dengan ring atau bus, menyesuaikan kebutuhan tiap bagian jaringan.</p>
+  <h3>Karakteristik</h3>${li(['Menggabungkan dua atau lebih jenis topologi berbeda.','Sangat fleksibel mengikuti kondisi lapangan.','Banyak dipakai pada jaringan skala besar dan kompleks.','Sifatnya mewarisi kelebihan sekaligus kekurangan topologi penyusunnya.'])}
+  <div class="figure">${DIAG.hybrid()}<div class="figcap">Diagram topologi Hybrid (star + ring dihubungkan jalur bus)</div></div>
+  ${pros(['Sangat fleksibel dan mudah diperluas.','Dapat menyesuaikan kebutuhan tiap area.','Kerusakan pada satu bagian tidak selalu melumpuhkan bagian lain.','Cocok untuk jaringan besar.'],['Desain dan pengelolaan paling kompleks.','Biaya instalasi mahal.','Butuh perangkat jaringan lebih banyak.','Perawatan menuntut tenaga ahli.'])}`}
+];
+
+/* =================== BANK SOAL =================== */
+const DEFAULT_BANK={
+ pan:[
+  {q:'Jangkauan Personal Area Network (PAN) umumnya sekitar...',o:['1&ndash;10 meter','1 kilometer','10&ndash;50 kilometer','Antar negara'],a:0,e:'PAN hanya menjangkau area pribadi sekitar 1&ndash;10 meter.'},
+  {q:'Teknologi berikut yang paling umum dipakai pada PAN adalah...',o:['Fiber optic','Bluetooth','Satelit','Kabel laut'],a:1,e:'PAN biasanya nirkabel dengan Bluetooth, NFC, atau infrared.'},
+  {q:'Contoh penerapan PAN adalah...',o:['Jaringan seluruh sekolah','HP tersambung ke earphone Bluetooth','Internet','Jaringan antar kantor dinas se-kota'],a:1,e:'PAN menghubungkan perangkat pribadi milik satu orang.'},
+  {q:'Ciri PAN yang benar adalah...',o:['Biaya sangat mahal','Dikelola operator telekomunikasi','Perangkat sedikit dan milik satu orang','Menjangkau antar pulau'],a:2,e:'PAN melayani perangkat pribadi dalam jumlah sedikit.'},
+  {q:'Kecepatan transfer pada PAN dibanding LAN umumnya...',o:['Lebih rendah','Jauh lebih tinggi','Selalu sama','Tak terbatas'],a:0,e:'PAN memiliki kecepatan lebih rendah dibanding LAN.'}
+ ],
+ lan:[
+  {q:'LAN paling tepat digunakan untuk...',o:['Menghubungkan komputer dalam satu gedung sekolah','Menghubungkan antar negara','Menghubungkan HP dengan smartwatch','Menghubungkan kota-kota'],a:0,e:'LAN mencakup area terbatas seperti gedung atau sekolah.'},
+  {q:'Media yang umum dipakai LAN adalah...',o:['Satelit','Kabel UTP dan Wi-Fi','Kabel laut','Gelombang radio antar kota'],a:1,e:'LAN umumnya memakai kabel UTP/switch atau Wi-Fi.'},
+  {q:'Salah satu ciri LAN adalah...',o:['Kecepatan rendah','Dikelola ISP','Kecepatan tinggi dan error rendah','Jangkauan antar benua'],a:2,e:'LAN memiliki kecepatan tinggi dengan tingkat kesalahan rendah.'},
+  {q:'LAN yang menggunakan media nirkabel disebut...',o:['WLAN','WAN','MAN','PAN'],a:0,e:'LAN nirkabel disebut WLAN (Wireless LAN).'},
+  {q:'Pengelola jaringan LAN sekolah umumnya adalah...',o:['Operator seluler','Pemerintah pusat','Pihak sekolah sendiri','Perusahaan satelit'],a:2,e:'LAN dikelola sendiri oleh pemiliknya.'}
+ ],
+ man:[
+  {q:'MAN mencakup wilayah...',o:['Satu ruangan','Satu kota / kabupaten','Satu benua','Sekitar 10 meter'],a:1,e:'MAN mencakup area metropolitan sekitar 10&ndash;50 km.'},
+  {q:'MAN pada dasarnya merupakan gabungan dari beberapa...',o:['PAN','LAN','WAN','Internet'],a:1,e:'MAN adalah gabungan beberapa LAN dalam satu kota.'},
+  {q:'Media transmisi yang sering dipakai MAN adalah...',o:['Bluetooth','Infrared','Fiber optic dan microwave','Kabel USB'],a:2,e:'MAN memakai fiber optic atau gelombang microwave.'},
+  {q:'Kelemahan MAN adalah...',o:['Jangkauan terlalu kecil','Perbaikan butuh waktu lama dan biaya besar','Tidak bisa dipakai bersama','Kecepatan sangat rendah'],a:1,e:'Cakupan luas membuat perbaikan MAN lebih lama dan mahal.'},
+  {q:'Contoh MAN adalah...',o:['Jaringan antar kantor dinas dalam satu kabupaten','Earphone Bluetooth','Lab komputer sekolah','Jaringan antar negara'],a:0,e:'MAN menghubungkan banyak lokasi dalam satu kota/kabupaten.'}
+ ],
+ wan:[
+  {q:'Contoh WAN terbesar di dunia adalah...',o:['Internet','Bluetooth','Lab komputer','Hotspot pribadi'],a:0,e:'Internet adalah WAN terbesar di dunia.'},
+  {q:'Media WAN antar benua umumnya menggunakan...',o:['Kabel UTP','Satelit dan kabel laut','Infrared','Kabel HDMI'],a:1,e:'WAN memakai satelit dan submarine cable.'},
+  {q:'Pengelola WAN umumnya adalah...',o:['Pengguna sendiri','Guru TIK','Operator/ISP','Ketua kelas'],a:2,e:'WAN dikelola oleh operator telekomunikasi atau ISP.'},
+  {q:'Dibanding LAN, latency (jeda) pada WAN cenderung...',o:['Lebih besar','Lebih kecil','Nol','Tidak ada hubungannya'],a:0,e:'Jarak jauh dan banyak perantara membuat latency WAN lebih besar.'},
+  {q:'Urutan jangkauan dari terkecil ke terbesar yang benar adalah...',o:['LAN - PAN - MAN - WAN','PAN - LAN - MAN - WAN','WAN - MAN - LAN - PAN','PAN - MAN - LAN - WAN'],a:1,e:'Urutannya PAN &lt; LAN &lt; MAN &lt; WAN.'}
+ ],
+ p2p:[
+  {q:'Ciri utama arsitektur peer-to-peer adalah...',o:['Ada server pusat','Semua komputer berkedudukan setara','Butuh administrator khusus','Hanya untuk jaringan besar'],a:1,e:'Pada P2P semua node setara, bisa jadi client sekaligus server.'},
+  {q:'Kelebihan peer-to-peer adalah...',o:['Keamanan terpusat','Biaya murah tanpa server','Backup otomatis di server','Cocok untuk ribuan komputer'],a:1,e:'P2P murah karena tidak memerlukan server khusus.'},
+  {q:'Kekurangan peer-to-peer adalah...',o:['Keamanan lemah karena diatur sendiri-sendiri','Butuh server mahal','Tidak bisa berbagi file','Selalu butuh internet'],a:0,e:'Keamanan P2P diatur tiap komputer sehingga lebih lemah.'},
+  {q:'Peer-to-peer paling cocok untuk jaringan dengan jumlah komputer...',o:['Sedikit (di bawah 10)','Ratusan','Ribuan','Tak terbatas'],a:0,e:'P2P ideal untuk jaringan kecil.'},
+  {q:'Jika satu komputer pada jaringan P2P mati, maka...',o:['Semua jaringan mati','Komputer lain tetap bisa bekerja','Server ikut mati','Data semua hilang'],a:1,e:'Tidak ada pusat, jadi node lain tetap berfungsi.'}
+ ],
+ cs:[
+  {q:'Pada client-server, permintaan data dikirim oleh...',o:['Server ke client','Client ke server','Hub ke switch','Router ke terminator'],a:1,e:'Client mengirim request, server memberi response.'},
+  {q:'Kelebihan client-server adalah...',o:['Keamanan dan data terpusat','Tidak perlu administrator','Biaya paling murah','Tidak butuh perangkat khusus'],a:0,e:'Data dan hak akses terpusat di server.'},
+  {q:'Kelemahan utama client-server adalah...',o:['Tidak bisa berbagi printer','Jika server mati, layanan berhenti','Tidak bisa menambah client','Keamanan sangat lemah'],a:1,e:'Server menjadi titik kegagalan tunggal.'},
+  {q:'Backup data pada client-server cukup dilakukan di...',o:['Setiap client','Server','Hub','Kabel'],a:1,e:'Karena data terpusat, backup dilakukan di server.'},
+  {q:'Client-server paling cocok untuk...',o:['Jaringan menengah hingga besar','Dua komputer saja','Jaringan tanpa listrik','Jaringan Bluetooth'],a:0,e:'Client-server dirancang untuk skala menengah&ndash;besar.'}
+ ],
+ bus:[
+  {q:'Perangkat di kedua ujung kabel topologi bus disebut...',o:['Terminator','Repeater','Hub','Router'],a:0,e:'Terminator mencegah sinyal memantul di ujung kabel.'},
+  {q:'Jika kabel utama topologi bus putus, maka...',o:['Hanya satu PC terganggu','Seluruh jaringan mati','Jaringan makin cepat','Tidak berpengaruh'],a:1,e:'Kabel utama adalah jalur tunggal seluruh jaringan.'},
+  {q:'Kelebihan topologi bus adalah...',o:['Hemat kabel dan murah','Tidak pernah tabrakan data','Sangat cepat','Deteksi kerusakan mudah'],a:0,e:'Bus paling hemat kabel dan biaya.'},
+  {q:'Masalah yang sering terjadi pada topologi bus adalah...',o:['Token hilang','Collision (tabrakan data)','Kelebihan hub','IP ganda otomatis'],a:1,e:'Karena satu jalur bersama, sering terjadi collision.'},
+  {q:'Kabel yang identik dengan topologi bus lama adalah...',o:['Coaxial','HDMI','Fiber to the home','USB-C'],a:0,e:'Topologi bus klasik memakai kabel coaxial.'}
+ ],
+ ring:[
+  {q:'Pengaturan giliran pengiriman data pada topologi ring memakai...',o:['Terminator','Token','Firewall','Bridge'],a:1,e:'Token menentukan node mana yang boleh mengirim data.'},
+  {q:'Bentuk jalur pada topologi ring adalah...',o:['Lurus','Melingkar tertutup','Bercabang','Acak'],a:1,e:'Ring membentuk lingkaran tertutup.'},
+  {q:'Kelebihan topologi ring adalah...',o:['Tidak terjadi tabrakan data','Sangat mudah menambah node','Tidak butuh kabel','Node bebas mati'],a:0,e:'Sistem token mencegah collision.'},
+  {q:'Kekurangan topologi ring adalah...',o:['Boros kabel sekali','Satu node rusak melumpuhkan jaringan','Tidak bisa dipakai kantor','Selalu lambat'],a:1,e:'Data melewati tiap node, sehingga node rusak memutus jalur.'},
+  {q:'Pada ring, setiap node juga berfungsi sebagai...',o:['Terminator','Repeater penguat sinyal','Modem','Access point'],a:1,e:'Tiap node meneruskan dan menguatkan sinyal.'}
+ ],
+ starT:[
+  {q:'Perangkat pusat pada topologi star adalah...',o:['Terminator','Hub atau switch','Token','Kabel coaxial'],a:1,e:'Star memusatkan koneksi pada hub/switch.'},
+  {q:'Jika satu kabel client pada star putus, maka...',o:['Seluruh jaringan mati','Hanya node itu yang terganggu','Server rusak','Data hilang semua'],a:1,e:'Tiap node memiliki jalur sendiri.'},
+  {q:'Kekurangan topologi star adalah...',o:['Sangat bergantung pada hub/switch pusat','Sulit menambah node','Tidak bisa memakai UTP','Tidak cocok untuk kantor'],a:0,e:'Kerusakan perangkat pusat melumpuhkan jaringan.'},
+  {q:'Kabel yang umum dipakai topologi star adalah...',o:['UTP dengan konektor RJ-45','Coaxial dengan BNC','Kabel listrik','Kabel audio'],a:0,e:'Star umumnya memakai UTP + RJ-45.'},
+  {q:'Topologi yang paling banyak dipakai di lab sekolah adalah...',o:['Bus','Ring','Star','Mesh'],a:2,e:'Star paling umum karena mudah dikelola.'}
+ ],
+ mesh:[
+  {q:'Rumus jumlah kabel pada full mesh dengan n node adalah...',o:['n(n-1)/2','n+1','2n','n/2'],a:0,e:'Full mesh membutuhkan n(n-1)/2 jalur.'},
+  {q:'Dengan 5 komputer, full mesh membutuhkan kabel sebanyak...',o:['5','10','15','20'],a:1,e:'5(5-1)/2 = 10 kabel.'},
+  {q:'Kelebihan utama topologi mesh adalah...',o:['Sangat andal karena banyak jalur cadangan','Paling hemat biaya','Instalasi paling mudah','Hanya butuh satu kabel'],a:0,e:'Mesh menyediakan jalur alternatif jika satu putus.'},
+  {q:'Kekurangan topologi mesh adalah...',o:['Sering collision','Biaya dan jumlah kabel sangat besar','Data lambat sampai','Tidak aman'],a:1,e:'Mesh boros kabel dan port sehingga mahal.'},
+  {q:'Mesh biasanya dipakai pada jaringan yang menuntut...',o:['Biaya termurah','Keandalan tinggi','Kabel sesedikit mungkin','Instalasi tercepat'],a:1,e:'Mesh dipilih untuk keandalan tinggi.'}
+ ],
+ tree:[
+  {q:'Topologi tree pada dasarnya merupakan gabungan beberapa topologi...',o:['Star','Ring','Mesh','Bus murni'],a:0,e:'Tree adalah gabungan beberapa star yang bertingkat.'},
+  {q:'Struktur topologi tree bersifat...',o:['Melingkar','Hierarkis bercabang','Acak','Satu jalur lurus'],a:1,e:'Tree tersusun hierarkis dari root ke cabang.'},
+  {q:'Jika perangkat pusat (root) pada tree rusak, maka...',o:['Tidak berpengaruh','Seluruh jaringan terganggu','Hanya satu PC mati','Jaringan makin cepat'],a:1,e:'Root adalah penghubung seluruh cabang.'},
+  {q:'Kelebihan topologi tree adalah...',o:['Mudah dikembangkan untuk jaringan besar','Paling hemat kabel','Tidak butuh switch','Tanpa hierarki'],a:0,e:'Tree mudah diperluas per kelompok.'},
+  {q:'Topologi tree cocok diterapkan pada...',o:['Dua komputer di rumah','Sekolah bertingkat dengan banyak lab','Earphone Bluetooth','Jaringan tanpa switch'],a:1,e:'Tree cocok untuk organisasi berlapis.'}
+ ],
+ hybrid:[
+  {q:'Topologi hybrid adalah...',o:['Gabungan dua topologi atau lebih','Topologi tanpa kabel','Topologi khusus server','Nama lain topologi bus'],a:0,e:'Hybrid menggabungkan dua atau lebih topologi berbeda.'},
+  {q:'Kelebihan topologi hybrid adalah...',o:['Fleksibel dan mudah diperluas','Paling murah','Paling sederhana','Tidak butuh perangkat jaringan'],a:0,e:'Hybrid fleksibel mengikuti kebutuhan tiap area.'},
+  {q:'Kekurangan topologi hybrid adalah...',o:['Tidak bisa dipakai kantor','Desain dan pengelolaannya kompleks','Tidak punya kelebihan','Hanya untuk 2 komputer'],a:1,e:'Menggabungkan banyak topologi membuat pengelolaan rumit.'},
+  {q:'Contoh hybrid adalah gabungan...',o:['Star dan ring','Ring dan ring identik','Star dan star identik saja','Tidak ada contohnya'],a:0,e:'Misalnya bagian star dihubungkan dengan bagian ring.'},
+  {q:'Hybrid banyak dipakai pada jaringan...',o:['Skala besar dan kompleks','Hanya rumah tangga','Tanpa internet','Hanya PAN'],a:0,e:'Hybrid lazim pada jaringan besar dan beragam kebutuhan.'}
+ ]
+};
+let bank=load(K.bank,null)||JSON.parse(JSON.stringify(DEFAULT_BANK));
+
+/* =================== SHEET =================== */
+function sendToSheet(type,payload,statusEl){
+  const url=(cfg.sheetUrl||'').trim();
+  if(statusEl) statusEl.textContent='Mengirim data ke spreadsheet...';
+  if(!url){ if(statusEl) statusEl.innerHTML='<span style="color:#b6741a">Belum ada URL Google Apps Script. Data hanya tersimpan lokal.</span>'; return Promise.resolve(false);}
+  return fetch(url,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(Object.assign({type},payload))})
+    .then(()=>{if(statusEl) statusEl.innerHTML='<span style="color:#0E8F6F">&#10003; Data berhasil dikirim ke Google Spreadsheet.</span>';return true})
+    .catch(()=>{if(statusEl) statusEl.innerHTML='<span style="color:#c02626">&#10007; Gagal mengirim ke spreadsheet (data tetap tersimpan lokal).</span>';return false});
+}
+
+/* =================== GATE =================== */
+function submitGate(){
+  const n=gName.value.trim(),g=gGrade.value,a=gAddr.value.trim();
+  eName.classList.toggle('hidden',!!n); eGrade.classList.toggle('hidden',!!g); eAddr.classList.toggle('hidden',!!a);
+  if(!n||!g||!a) return;
+  student={name:n,grade:g+(gRombel.value.trim()?' - '+gRombel.value.trim():''),address:a,subject:'Informatika',at:new Date().toISOString()};
+  save(K.student,student);
+  roster.push({ts:new Date().toLocaleString('id-ID'),name:student.name,grade:student.grade,address:student.address,subject:student.subject});
+  save(K.roster,roster);
+  sendToSheet('absensi',{timestamp:new Date().toLocaleString('id-ID'),nama:student.name,kelas:student.grade,alamat:student.address,mapel:student.subject},gateStatus)
+    .then(()=>setTimeout(()=>{gate.classList.add('hidden');go('beranda')},700));
+}
+
+/* =================== NAV =================== */
+const PAGES=[{id:'beranda',t:'Beranda'},{id:'petunjuk',t:'Petunjuk Penggunaan'},{id:'tentang',t:'Tentang'},{id:'riwayat',t:'Riwayat Skor Saya'}];
+function buildNav(){
+  let h='<div class="sb-title">Navigasi</div>';
+  PAGES.forEach(p=>h+=`<button class="navitem" data-id="${p.id}" onclick="go('${p.id}')"><span class="dot"></span>${p.t}</button>`);
+  let grp='';
+  MATERI.forEach(m=>{ if(m.group!==grp){grp=m.group;h+=`<div class="sb-title">${grp}</div>`}
+    h+=`<button class="navitem sub ${prog[m.id]?'done':''}" data-id="${m.id}" onclick="go('${m.id}')"><span class="dot"></span>${m.title}</button>`;});
+  h+='<div class="sb-title">Evaluasi</div><button class="navitem" data-id="final" onclick="go(\'final\')"><span class="dot"></span>Kuis Akhir Bab</button>';
+  navList.innerHTML=h; updateProgress();
+}
+function updateProgress(){
+  const done=MATERI.filter(m=>prog[m.id]).length;
+  progBar.style.width=(done/MATERI.length*100)+'%';
+  progText.textContent=`${done} dari ${MATERI.length} materi selesai`;
+}
+function toggleSidebar(){sidebar.classList.toggle('open')}
+function go(id){
+  document.querySelectorAll('.navitem').forEach(b=>b.classList.toggle('active',b.dataset.id===id));
+  sidebar.classList.remove('open'); window.scrollTo({top:0,behavior:'smooth'});
+  if(id==='beranda')return renderHome();
+  if(id==='petunjuk')return renderPetunjuk();
+  if(id==='tentang')return renderTentang();
+  if(id==='riwayat')return renderRiwayat();
+  if(id==='final')return renderFinal();
+  renderMateri(id);
+}
+
+/* =================== RENDER PAGES =================== */
+function renderHome(){
+  const done=MATERI.filter(m=>prog[m.id]).length;
+  main.innerHTML=`<div class="card" style="background:linear-gradient(135deg,var(--blue-dark),var(--blue) 60%,var(--green));color:#fff;border:0">
+    <span class="badge orange">Informatika &middot; Kelas X SMA</span>
+    <h2 style="color:#fff;margin-top:10px;font-size:28px">Jaringan Komputer</h2>
+    <p style="opacity:.9;font-size:15px;margin-top:6px">Belajar mandiri dasar jaringan komputer: jenis jaringan (PAN, LAN, MAN, WAN), arsitektur jaringan, dan enam topologi fisik &mdash; lengkap dengan diagram dan kuis interaktif.</p>
+    <div class="row" style="margin-top:16px"><button class="btn orange" onclick="go('pan')">Mulai dari Materi Pertama</button><button class="btn ghost" onclick="go('petunjuk')">Petunjuk Penggunaan</button></div></div>
+
+  <div class="card"><h3 style="margin-top:0">Identitas Siswa</h3>
+    <div class="grid2">
+      <div class="tile"><b>Nama</b><br><span style="color:var(--muted)">${student?student.name:'-'}</span></div>
+      <div class="tile"><b>Kelas</b><br><span style="color:var(--muted)">${student?student.grade:'-'}</span></div>
+      <div class="tile"><b>Alamat</b><br><span style="color:var(--muted)">${student?student.address:'-'}</span></div>
+      <div class="tile"><b>Mata Pelajaran</b><br><span style="color:var(--muted)">Informatika</span></div>
+    </div></div>
+
+  <div class="card"><h3 style="margin-top:0">Peta Materi</h3>
+    <div class="grid2">${MATERI.map(m=>`<button class="tile" style="text-align:left" onclick="go('${m.id}')">
+      <span class="badge ${prog[m.id]?'':'blue'}">${prog[m.id]?'Selesai':'Belum'}</span>
+      <div style="font-weight:700;margin-top:8px">${m.title}</div>
+      <div style="font-size:12px;color:var(--muted)">${m.group}</div></button>`).join('')}</div>
+    <div class="note">Progres belajarmu: <b>${done}/${MATERI.length}</b> materi. Setiap materi diakhiri kuis singkat, dan di akhir tersedia <b>Kuis Akhir Bab</b> berisi 18 soal acak.</div>
+  </div>`;
+}
+function renderPetunjuk(){
+  main.innerHTML=`<div class="card"><span class="eyebrow">Panduan</span><h2>Petunjuk Penggunaan</h2>
+  ${li(['Isi form absensi (nama, kelas, alamat) sebelum masuk materi. Data ini otomatis melekat pada setiap skor kuismu.','Pilih materi dari menu samping (klik ikon &#9776; pada HP untuk membuka menu).','Baca penjelasan, perhatikan diagram, lalu kerjakan kuis singkat di bagian bawah tiap materi.','Klik <b>Periksa Jawaban</b> untuk melihat skor, jawaban benar/salah, dan pembahasan.','Materi yang sudah dikuisi akan ditandai hijau pada menu dan menambah progres belajar.','Setelah semua materi selesai, kerjakan <b>Kuis Akhir Bab</b> (18 soal acak).','Lihat seluruh nilaimu di menu <b>Riwayat Skor Saya</b>.'])}
+  <div class="note">Setiap kali kuis selesai, nilaimu otomatis dikirim ke Google Spreadsheet guru. Status pengiriman akan tampil di bawah hasil kuis.</div>
+  <div class="note warn">Gunakan perangkat yang sama agar riwayat belajar dan skormu tetap tersimpan.</div></div>`;
+}
+function renderTentang(){
+  main.innerHTML=`<div class="card"><span class="eyebrow">Profil</span><h2>Tentang</h2>
+  <div class="row" style="margin-top:14px;align-items:center">
+    <div class="avatar" style="width:88px;height:88px;background:var(--blue-soft);color:var(--blue);font-size:11px" id="aboutPhoto">FOTO GURU</div>
+    <div><div style="font-size:18px;font-weight:800">${cfg.teacher}</div>
+    <div style="color:var(--muted)">${cfg.role}</div>
+    <div style="color:var(--muted)">Mengajar ${cfg.classes}</div></div>
+    <div class="avatar" style="width:88px;height:88px;background:var(--green-soft);color:var(--green);font-size:11px" id="aboutLogo">LOGO SEKOLAH</div>
+  </div>
+  <h3>Tentang Aplikasi</h3>
+  <p class="lead">Modul pembelajaran interaktif Informatika SMA dengan tema <b>Jaringan Komputer</b>. Berisi materi dasar jaringan, diagram skematik tiap konsep, kuis per sub-bab, kuis akhir bab, serta pencatatan absensi dan nilai otomatis ke Google Spreadsheet guru.</p>
+  <div class="note">${cfg.school}</div></div>`;
+  applyPhotos();
+}
+function renderRiwayat(){
+  const mine=scores.filter(s=>student&&s.name===student.name);
+  main.innerHTML=`<div class="card"><span class="eyebrow">Nilai</span><h2>Riwayat Skor Saya</h2>
+  <p class="lead">Daftar kuis yang sudah kamu kerjakan pada sesi ini.</p>
+  ${mine.length?`<div class="tblwrap"><table><tr><th>Waktu</th><th>Judul Kuis</th><th>Benar</th><th>Salah</th><th>Nilai</th></tr>
+  ${mine.slice().reverse().map(s=>`<tr><td>${s.ts}</td><td>${s.title}</td><td>${s.correct}</td><td>${s.wrong}</td><td><b>${s.score}</b></td></tr>`).join('')}</table></div>`
+  :'<div class="note warn">Belum ada kuis yang kamu kerjakan.</div>'}</div>`;
+}
+function renderMateri(id){
+  const m=MATERI.find(x=>x.id===id); if(!m)return renderHome();
+  main.innerHTML=`<div class="card"><span class="eyebrow">${m.group}</span><h2>${m.title}</h2>${m.body()}</div>
+   <div class="card" id="quizCard"><span class="eyebrow">Latihan</span><h2>Kuis: ${m.title.replace(/^[a-z0-9]\. /i,'')}</h2>
+   <p class="lead">Jawab semua soal berikut lalu tekan Periksa Jawaban.</p><div id="quizBody"></div></div>`;
+  renderQuiz(bank[id]||[],'Kuis '+m.title,id);
+}
+function renderFinal(){
+  const all=[];Object.keys(bank).forEach(k=>(bank[k]||[]).forEach(q=>all.push(q)));
+  const pick=all.sort(()=>Math.random()-.5).slice(0,Math.min(18,all.length));
+  main.innerHTML=`<div class="card"><span class="eyebrow">Evaluasi Akhir</span><h2>Kuis Akhir Bab &mdash; Jaringan Komputer</h2>
+   <p class="lead">${pick.length} soal acak dari seluruh sub-materi. Kerjakan dengan teliti.</p><div id="quizBody"></div></div>`;
+  renderQuiz(pick,'Kuis Akhir Bab - Jaringan Komputer','final');
+}
+
+/* =================== QUIZ ENGINE =================== */
+let answers={};
+function renderQuiz(qs,title,id){
+  answers={};
+  if(!qs.length){quizBody.innerHTML='<div class="note warn">Belum ada soal untuk materi ini. Guru dapat menambahkannya lewat Mode Guru.</div>';return}
+  quizBody.innerHTML=qs.map((q,i)=>`<div class="q" id="q${i}"><p class="qt">${i+1}. ${q.q}</p>
+    ${q.o.map((o,j)=>`<div class="opt" data-q="${i}" data-o="${j}" onclick="pick(${i},${j})"><b>${'ABCD'[j]}.</b><span>${o}</span></div>`).join('')}
+    <div class="expl hidden" id="e${i}"></div></div>`).join('')
+    +`<button class="btn orange" onclick='checkQuiz(${JSON.stringify(qs).replace(/'/g,"&#39;")},${JSON.stringify(title)},${JSON.stringify(id)})'>Periksa Jawaban</button><div id="result" style="margin-top:16px"></div>`;
+}
+function pick(i,j){
+  if(document.getElementById('result')&&document.getElementById('result').dataset.done)return;
+  answers[i]=j;
+  document.querySelectorAll(`.opt[data-q="${i}"]`).forEach(o=>o.classList.toggle('sel',+o.dataset.o===j));
+}
+function checkQuiz(qs,title,id){
+  const res=document.getElementById('result');
+  if(Object.keys(answers).length<qs.length){toast('Masih ada soal yang belum dijawab.');return}
+  let correct=0;
+  qs.forEach((q,i)=>{
+    document.querySelectorAll(`.opt[data-q="${i}"]`).forEach(o=>{const j=+o.dataset.o;o.classList.remove('sel');
+      if(j===q.a)o.classList.add('ok'); else if(j===answers[i])o.classList.add('no');});
+    if(answers[i]===q.a)correct++;
+    else{const e=document.getElementById('e'+i);e.classList.remove('hidden');e.innerHTML=`<b>Pembahasan:</b> ${q.e} <br><b>Jawaban benar: ${'ABCD'[q.a]}</b>`}
+  });
+  const wrong=qs.length-correct,score=Math.round(correct/qs.length*100);
+  res.dataset.done='1';
+  res.innerHTML=`<div class="scorebox"><div class="num">${score}</div>
+    <div style="font-weight:700;margin-top:6px">${correct} benar &middot; ${wrong} salah dari ${qs.length} soal</div>
+    <div style="font-size:13px;color:var(--muted);margin-top:4px">${score>=80?'Luar biasa, pemahamanmu sangat baik!':score>=60?'Cukup baik, pelajari kembali bagian yang salah.':'Ayo pelajari ulang materinya lalu coba lagi.'}</div>
+    <div id="sendStatus" style="font-size:12.5px;margin-top:10px"></div></div>`;
+  const rec={ts:new Date().toLocaleString('id-ID'),name:student?student.name:'-',grade:student?student.grade:'-',address:student?student.address:'-',subject:'Informatika',title,correct,wrong,score};
+  scores.push(rec);save(K.scores,scores);
+  if(id!=='final'){prog[id]=true;save(K.prog,prog);buildNav();document.querySelectorAll('.navitem').forEach(b=>b.classList.toggle('active',b.dataset.id===id));}
+  sendToSheet('skor',{timestamp:rec.ts,nama:rec.name,kelas:rec.grade,alamat:rec.address,mapel:rec.subject,judul_kuis:title,benar:correct,salah:wrong,nilai:score},document.getElementById('sendStatus'));
+  res.scrollIntoView({behavior:'smooth',block:'center'});
+}
+
+/* =================== MODE GURU =================== */
+function openTeacher(){
+  const w=document.createElement('div');w.className='overlay';w.id='tOverlay';
+  w.innerHTML=`<div class="modal"><h2>Mode Guru</h2><p class="lead">Masukkan PIN untuk membuka panel guru.</p>
+  <div class="field" style="margin-top:12px"><label>PIN</label><input id="pinIn" type="password" inputmode="numeric" maxlength="8" placeholder="****"></div>
+  <div class="row"><button class="btn" onclick="checkPin()">Masuk</button><button class="btn ghost" onclick="closeT()">Batal</button></div>
+  <p style="font-size:11.5px;color:var(--muted);margin-top:10px">PIN awal: 1234 (dapat diubah di dalam panel).</p></div>`;
+  document.body.appendChild(w);
+}
+function closeT(){const o=document.getElementById('tOverlay');if(o)o.remove()}
+function checkPin(){ if(pinIn.value===cfg.pin){closeT();teacherPanel()} else toast('PIN salah.') }
+
+let tTab='identitas';
+function teacherPanel(){
+  const w=document.createElement('div');w.className='overlay';w.id='tOverlay';
+  w.innerHTML=`<div class="modal wide"><div class="row"><h2 style="flex:1">Panel Mode Guru</h2><button class="btn ghost sm" onclick="closeT()">Tutup</button></div>
+  <div class="tabs">${[['identitas','Identitas &amp; Foto'],['sheet','Google Spreadsheet'],['rekap','Rekap Siswa'],['soal','Kelola Soal'],['reset','Keamanan &amp; Reset']].map(([k,t])=>`<button class="tab ${tTab===k?'active':''}" onclick="tTab='${k}';teacherTab()">${t}</button>`).join('')}</div>
+  <div id="tBody"></div></div>`;
+  closeT();document.body.appendChild(w);teacherTab();
+}
+function teacherTab(){
+  document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.textContent.trim().toLowerCase().startsWith(({identitas:'identitas',sheet:'google',rekap:'rekap',soal:'kelola',reset:'keamanan'})[tTab])));
+  const b=document.getElementById('tBody');if(!b)return;
+  if(tTab==='identitas') b.innerHTML=`
+    <div class="grid2">
+      <div class="tile"><b>Foto Profil Guru</b><div class="avatar" style="width:76px;height:76px;margin:10px 0;background:var(--blue-soft);color:var(--blue);font-size:10px" id="prevPhoto">FOTO</div>
+        <input type="file" accept="image/*" onchange="upload(this,'photo')"></div>
+      <div class="tile"><b>Logo / Foto Sekolah</b><div class="avatar" style="width:76px;height:76px;margin:10px 0;background:var(--green-soft);color:var(--green);font-size:10px" id="prevLogo">LOGO</div>
+        <input type="file" accept="image/*" onchange="upload(this,'logo')"></div>
+    </div>
+    <div class="field" style="margin-top:14px"><label>Nama Guru</label><input id="cTeacher" value="${cfg.teacher}"></div>
+    <div class="field"><label>Jabatan</label><input id="cRole" value="${cfg.role}"></div>
+    <div class="field"><label>Kelas yang Diampu</label><input id="cClasses" value="${cfg.classes}"></div>
+    <div class="field"><label>Nama Sekolah / Keterangan Footer</label><input id="cSchool" value="${cfg.school}"></div>
+    <button class="btn" onclick="saveIdentity()">Simpan Identitas</button>`;
+  if(tTab==='sheet') b.innerHTML=`
+    <div class="field"><label>Google Apps Script Web App URL</label><input id="cUrl" placeholder="https://script.google.com/macros/s/..../exec" value="${cfg.sheetUrl}"></div>
+    <div class="row"><button class="btn" onclick="saveUrl()">Simpan URL</button><button class="btn ghost" onclick="testUrl()">Tes Kirim Data</button></div>
+    <div id="testStat" style="font-size:12.5px;margin-top:10px"></div>
+    <div class="note"><b>Cara membuat Web App:</b>
+      ${li(['Buka Google Spreadsheet &rarr; menu <b>Extensions &rarr; Apps Script</b>.','Buat dua tab sheet bernama <b>Absensi</b> dan <b>Skor</b>.','Tempel kode <code>doPost(e)</code> yang membaca <code>JSON.parse(e.postData.contents)</code>, lalu <code>appendRow</code> ke sheet sesuai field <code>type</code> ("absensi" atau "skor").','Klik <b>Deploy &rarr; New deployment &rarr; Web app</b>. Execute as: <b>Me</b>, Who has access: <b>Anyone</b>.','Salin URL yang berakhiran <code>/exec</code> lalu tempel di kolom di atas.'])}
+    </div>
+    <div class="note warn"><b>Kolom Tab "Absensi":</b> Timestamp, Nama Siswa, Kelas, Alamat, Mapel.<br><b>Kolom Tab "Skor":</b> Timestamp, Nama Siswa, Kelas, Alamat, Mapel, Judul Kuis, Skor Benar, Skor Salah, Nilai Akhir (%).</div>`;
+  if(tTab==='rekap') renderRekap();
+  if(tTab==='soal') renderSoal();
+  if(tTab==='reset') b.innerHTML=`
+    <div class="field"><label>Ubah PIN Mode Guru (4&ndash;8 digit)</label><input id="cPin" value="${cfg.pin}" maxlength="8"></div>
+    <button class="btn" onclick="savePin()">Simpan PIN</button>
+    <div class="note warn" style="margin-top:16px"><b>Reset data lokal</b> &mdash; tindakan ini tidak menghapus data yang sudah masuk ke Google Spreadsheet.</div>
+    <div class="row" style="margin-top:10px">
+      <button class="btn ghost" onclick="resetData('scores')">Hapus Data Skor</button>
+      <button class="btn ghost" onclick="resetData('roster')">Hapus Data Absensi</button>
+      <button class="btn ghost" onclick="resetData('bank')">Kembalikan Soal Bawaan</button>
+      <button class="btn ghost" onclick="resetData('all')">Reset Semua Data Lokal</button>
+    </div>`;
+  applyPhotos();
+}
+function renderRekap(){
+  document.getElementById('tBody').innerHTML=`
+   <div class="row"><input id="fq" placeholder="Cari nama atau kelas..." style="flex:1;min-width:180px;padding:10px 12px;border:1.5px solid var(--line);border-radius:11px" oninput="fillRekap()">
+   <button class="btn ghost sm" onclick="exportCSV()">Export CSV</button></div>
+   <h3>Absensi Siswa</h3><div class="tblwrap" id="rAbs"></div>
+   <h3>Hasil Kuis</h3><div class="tblwrap" id="rSco"></div>`;
+  fillRekap();
+}
+function fillRekap(){
+  const q=(document.getElementById('fq')?.value||'').toLowerCase();
+  const fa=roster.filter(r=>(r.name+r.grade).toLowerCase().includes(q));
+  const fs=scores.filter(r=>(r.name+r.grade).toLowerCase().includes(q));
+  rAbs.innerHTML=fa.length?`<table><tr><th>Waktu</th><th>Nama</th><th>Kelas</th><th>Alamat</th><th>Mapel</th></tr>${fa.slice().reverse().map(r=>`<tr><td>${r.ts}</td><td>${r.name}</td><td>${r.grade}</td><td>${r.address}</td><td>${r.subject}</td></tr>`).join('')}</table>`:'<div style="padding:14px;color:var(--muted);font-size:13px">Belum ada data absensi.</div>';
+  rSco.innerHTML=fs.length?`<table><tr><th>Waktu</th><th>Nama</th><th>Kelas</th><th>Judul Kuis</th><th>Benar</th><th>Salah</th><th>Nilai</th></tr>${fs.slice().reverse().map(r=>`<tr><td>${r.ts}</td><td>${r.name}</td><td>${r.grade}</td><td>${r.title}</td><td>${r.correct}</td><td>${r.wrong}</td><td><b>${r.score}</b></td></tr>`).join('')}</table>`:'<div style="padding:14px;color:var(--muted);font-size:13px">Belum ada data skor.</div>';
+}
+function exportCSV(){
+  const rows=[['Timestamp','Nama','Kelas','Alamat','Mapel','Judul Kuis','Benar','Salah','Nilai']]
+    .concat(scores.map(s=>[s.ts,s.name,s.grade,s.address,s.subject,s.title,s.correct,s.wrong,s.score]));
+  const csv=rows.map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='rekap-jaringan-komputer.csv';a.click();
+}
+let soalTopic=MATERI[0].id;
+function renderSoal(){
+  const list=bank[soalTopic]||[];
+  document.getElementById('tBody').innerHTML=`
+   <div class="field"><label>Pilih Sub-Materi</label><select onchange="soalTopic=this.value;renderSoal()">
+     ${MATERI.map(m=>`<option value="${m.id}" ${m.id===soalTopic?'selected':''}>${m.title}</option>`).join('')}</select></div>
+   ${list.map((q,i)=>`<div class="q"><div class="field"><label>Soal ${i+1}</label><textarea rows="2" id="sq${i}">${q.q}</textarea></div>
+     ${q.o.map((o,j)=>`<div class="field"><label>Opsi ${'ABCD'[j]}</label><input id="so${i}_${j}" value="${o.replace(/"/g,'&quot;')}"></div>`).join('')}
+     <div class="row"><div class="field" style="flex:1"><label>Jawaban Benar</label><select id="sa${i}">${['A','B','C','D'].map((x,j)=>`<option value="${j}" ${q.a===j?'selected':''}>${x}</option>`).join('')}</select></div>
+     <div class="field" style="flex:2"><label>Pembahasan</label><input id="se${i}" value="${q.e.replace(/"/g,'&quot;')}"></div></div>
+     <button class="btn ghost sm" onclick="delSoal(${i})">Hapus Soal</button></div>`).join('')}
+   <div class="row"><button class="btn" onclick="saveSoal()">Simpan Perubahan Soal</button><button class="btn green" onclick="addSoal()">+ Tambah Soal</button></div>`;
+}
+function saveSoal(){
+  const list=bank[soalTopic]||[];
+  list.forEach((q,i)=>{q.q=document.getElementById('sq'+i).value;q.o=[0,1,2,3].map(j=>document.getElementById(`so${i}_${j}`).value);q.a=+document.getElementById('sa'+i).value;q.e=document.getElementById('se'+i).value;});
+  bank[soalTopic]=list;save(K.bank,bank);toast('Soal tersimpan.');
+}
+function addSoal(){saveSoalSilent();(bank[soalTopic]=bank[soalTopic]||[]).push({q:'Soal baru...',o:['Opsi A','Opsi B','Opsi C','Opsi D'],a:0,e:'Pembahasan singkat.'});save(K.bank,bank);renderSoal()}
+function saveSoalSilent(){try{saveSoal()}catch(e){}}
+function delSoal(i){bank[soalTopic].splice(i,1);save(K.bank,bank);renderSoal();toast('Soal dihapus.')}
+function saveIdentity(){
+  cfg.teacher=cTeacher.value;cfg.role=cRole.value;cfg.classes=cClasses.value;cfg.school=cSchool.value;save(K.cfg,cfg);applyIdentity();toast('Identitas tersimpan.');
+}
+function saveUrl(){cfg.sheetUrl=cUrl.value.trim();save(K.cfg,cfg);toast('URL tersimpan.')}
+function testUrl(){cfg.sheetUrl=cUrl.value.trim();save(K.cfg,cfg);sendToSheet('absensi',{timestamp:new Date().toLocaleString('id-ID'),nama:'TES KONEKSI',kelas:'-',alamat:'-',mapel:'Informatika'},document.getElementById('testStat'))}
+function savePin(){const v=cPin.value.trim();if(v.length<4)return toast('PIN minimal 4 digit.');cfg.pin=v;save(K.cfg,cfg);toast('PIN diperbarui.')}
+function upload(inp,key){
+  const f=inp.files[0];if(!f)return;const r=new FileReader();
+  r.onload=e=>{cfg[key]=e.target.result;save(K.cfg,cfg);applyPhotos();toast('Gambar tersimpan.')};r.readAsDataURL(f);
+}
+function resetData(t){
+  if(!confirm('Yakin menghapus data ini? Tindakan tidak bisa dibatalkan.'))return;
+  if(t==='scores'){scores=[];save(K.scores,scores)}
+  if(t==='roster'){roster=[];save(K.roster,roster)}
+  if(t==='bank'){bank=JSON.parse(JSON.stringify(DEFAULT_BANK));save(K.bank,bank)}
+  if(t==='all'){[K.scores,K.roster,K.prog,K.student].forEach(k=>localStorage.removeItem(k));scores=[];roster=[];prog={};student=null}
+  buildNav();toast('Data direset.');teacherTab();
+}
+function applyIdentity(){
+  hTeacher.textContent=cfg.teacher;hRole.textContent=cfg.role;hClasses.textContent=cfg.classes;
+  fTeacher.textContent=cfg.teacher;fRole.textContent=cfg.r
