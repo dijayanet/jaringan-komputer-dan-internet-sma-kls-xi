@@ -5,8 +5,8 @@
 **Pembina Ekstrakurikuler Multimedia**  
 **Sekolah:** SMA Islam Al-Mizan Jatiwangi - Majalengka
 
-🔗 **Live Demo:** `https://USERNAME.github.io/jaringan-komputer-sma/`  
-*(Ganti USERNAME dengan username GitHub Bapak setelah Pages aktif)*
+🔗 **Live Demo:** `https://dijayanet.github.io/jaringan-komputer-sma/`  
+
 
 ---
 
