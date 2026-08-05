@@ -592,6 +592,7 @@ function submitGate() {
   }, gateStatus)
   .then(() => setTimeout(() => {
     gate.classList.add('hidden');
+    updateLogoutButton(); // 🔥 TAMBAHKAN INI
     go('beranda');
   }, 700));
 }
@@ -1548,6 +1549,183 @@ function resetData(t) {
   toast('Data direset.');
   teacherTab();
 }
+  // ==================== MANAJEMEN SISWA DI PANEL GURU ====================
+
+/**
+ * Force logout siswa dari panel guru
+ * Menghapus data siswa dari localStorage dan menampilkan gate absensi
+ */
+function forceLogoutStudent() {
+  if (!student) {
+    toast('Tidak ada siswa yang sedang login.');
+    return;
+  }
+  
+  const name = student.name;
+  const grade = student.grade;
+  
+  // Konfirmasi dengan guru
+  if (!confirm(`⚠️ Yakin ingin logout siswa berikut?\n\nNama: ${name}\nKelas: ${grade}\n\nSiswa akan diminta login ulang.`)) {
+    return;
+  }
+  
+  try {
+    // Simpan nama untuk notifikasi
+    const studentName = student.name;
+    
+    // Hapus data siswa dari localStorage
+    localStorage.removeItem(K.student);
+    student = null;
+    
+    // Tampilkan gate absensi
+    document.getElementById('gate').classList.remove('hidden');
+    
+    // Reset halaman ke beranda
+    go('beranda');
+    
+    // Update tampilan tombol logout
+    updateLogoutButton();
+    
+    // Notifikasi
+    toast(`👋 ${studentName} berhasil di-logout oleh guru.`);
+    console.log(`✅ Guru logout siswa: ${studentName} pada ${new Date().toLocaleString()}`);
+    
+    // Refresh panel guru
+    teacherTab();
+    
+  } catch (err) {
+    console.error('❌ Error force logout:', err);
+    toast('⚠️ Gagal logout siswa. Silakan coba lagi.');
+  }
+}
+
+/**
+ * Hapus data siswa (tanpa logout)
+ * Berguna untuk mereset data siswa yang corrupt
+ */
+function clearStudentData() {
+  if (!student) {
+    toast('Tidak ada data siswa.');
+    return;
+  }
+  
+  const name = student.name;
+  
+  if (!confirm(`⚠️ Hapus semua data ${name}?\n\nData skor dan absensi tetap tersimpan di lokal.\n\nTindakan ini TIDAK mempengaruhi data di Google Spreadsheet.`)) {
+    return;
+  }
+  
+  try {
+    // Hapus data siswa
+    localStorage.removeItem(K.student);
+    student = null;
+    
+    // Tampilkan gate absensi
+    document.getElementById('gate').classList.remove('hidden');
+    
+    // Reset halaman
+    go('beranda');
+    
+    // Update tombol
+    updateLogoutButton();
+    
+    toast(`🗑️ Data siswa ${name} telah dihapus.`);
+    console.log(`🗑️ Data siswa dihapus oleh guru: ${name}`);
+    
+    // Refresh panel guru
+    teacherTab();
+    
+  } catch (err) {
+    console.error('❌ Error clear student data:', err);
+    toast('⚠️ Gagal menghapus data siswa.');
+  }
+}
+
+/**
+ * Tampilkan informasi siswa yang sedang login
+ */
+function showStudentInfo() {
+  const infoDiv = document.getElementById('studentInfo');
+  if (!infoDiv) return;
+  
+  if (student) {
+    infoDiv.style.display = 'block';
+    infoDiv.innerHTML = `
+      <div style="display:grid;grid-template-columns:auto 1fr;gap:4px 12px;padding:4px 0">
+        <b>Nama:</b> <span>${student.name}</span>
+        <b>Kelas:</b> <span>${student.grade}</span>
+        <b>Alamat:</b> <span>${student.address}</span>
+        <b>Mapel:</b> <span>${student.subject}</span>
+        <b>Login:</b> <span>${new Date(student.at).toLocaleString('id-ID')}</span>
+        <b>Status:</b> <span style="color:var(--green)">✅ Aktif</span>
+      </div>
+    `;
+    toast('👤 Info siswa ditampilkan.');
+  } else {
+    infoDiv.style.display = 'block';
+    infoDiv.innerHTML = `
+      <div style="padding:8px;color:var(--muted);text-align:center">
+        ❌ Tidak ada siswa yang sedang login.
+      </div>
+    `;
+  }
+}
+  // ==================== UPDATE TOMBOL LOGOUT ====================
+
+function updateLogoutButton() {
+  const logoutBtn = document.getElementById('logoutBtn');
+  if (!logoutBtn) return;
+  
+  if (student) {
+    logoutBtn.style.display = 'inline-block';
+    logoutBtn.textContent = `🚪 ${student.name}`;
+    logoutBtn.title = `Logout ${student.name}`;
+  } else {
+    logoutBtn.style.display = 'none';
+  }
+}
+
+// Panggil updateLogoutButton di beberapa tempat
+// 1. Di fungsi go()
+// 2. Di fungsi submitGate() setelah login
+// 3. Di fungsi logoutStudent()
+// 4. Di init
+  // ==================== UPDATE TOMBOL LOGOUT ====================
+  function go(id) {
+  document.querySelectorAll('.navitem').forEach(b => b.classList.toggle('active', b.dataset.id === id));
+  sidebar.classList.remove('open');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  
+  // 🔥 UPDATE TOMBOL LOGOUT
+  updateLogoutButton();
+  
+  if (id === 'beranda') return renderHome();
+  if (id === 'petunjuk') return renderPetunjuk();
+  if (id === 'gthub') return renderGTHub();
+  if (id === 'tentang') return renderTentang();
+  if (id === 'riwayat') return renderRiwayat();
+  if (id === 'final') return renderFinal();
+  renderMateri(id);
+}
+
+function updateLogoutButton() {
+  const logoutBtn = document.getElementById('logoutBtn');
+  if (!logoutBtn) return;
+  
+  if (student) {
+    logoutBtn.style.display = 'inline-block';
+    logoutBtn.textContent = `🚪 ${student.name}`;
+    logoutBtn.title = `Logout ${student.name}`;
+  } else {
+    logoutBtn.style.display = 'none';
+  }
+}
+
+// Panggil updateLogoutButton di beberapa tempat
+// 1. Di fungsi go()
+// 2. Di fungsi submitGate() setelah login
+// 3. Di fungsi logoutStudent()
+// 4. Di init
 
 // ==================== UI HELPERS ====================
 function applyIdentity() {
